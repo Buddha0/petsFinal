@@ -72,7 +72,7 @@ export default function PetsDescription() {
                 <div className={styles.morePets}>
                     <h1>More Pets You Might Like</h1>
                     <div className={styles.cards}>
-                        {pets.slice(0, 3).map((pets) => {
+                        {pets.slice(0, 4).filter((data)=>data._id !== id).map((pets) => {
                             return <Card pet={pets} key={pets.id} />;
                         })}
                     </div>
