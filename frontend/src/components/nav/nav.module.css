@@ -1,0 +1,35 @@
+nav {
+  width: 100%;
+  display: flex;
+  padding: 0rem 2rem;
+}
+
+.navContainer {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+}
+
+.ul {
+  text-decoration: none;
+  display: flex;
+  gap: 3rem;
+  list-style: none;
+}
+
+.text {
+  font-size: 1.3rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo {
+width:8rem ;
+height:8rem;
+
+}
