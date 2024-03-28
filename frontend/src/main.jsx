@@ -6,6 +6,7 @@ import Login from "./pages/login/login";
 import Register from "./pages/register/register";
 import Home from "./pages/home/home";
 import AllPets from "./pages/allPets/allPets";
+import PetsDescription from "./pages/petsDescription/petsDescription";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/allPets",
     element: <AllPets />,
+  },
+  {
+    path: "/petDescription/:id",
+    element: <PetsDescription/>,
   },
 ]);
 

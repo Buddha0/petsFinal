@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./card.module.css";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { Link } from "react-router-dom";
 
 export default function Card({ pet }) {
     const [img, setImg] = useState(null); // Initialize img state as null
@@ -25,6 +26,7 @@ export default function Card({ pet }) {
             {(img === null) && <div className={styles.skeletonLoading}></div>}
 
             {/* Show LazyLoadImage when img is loaded */}
+            <Link to = {`/petDescription/${pet._id}`} onClick={()=>window.scrollTo(0,0)}>
             {img && (
                 <LazyLoadImage
                     src={img.src}
@@ -32,6 +34,8 @@ export default function Card({ pet }) {
                     alt={pet.name}
                 />
             )}
+            </Link>
+           
 
             <div className={styles.description_container}>
                 <div className={styles.description_one}>

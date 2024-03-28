@@ -6,7 +6,7 @@ export default function Nav() {
     <>
       <nav className={styles.nav}>
         <div className={styles.navContainer}>
-          <img src="./logo.png" className={styles.logo}></img>
+          <img src="../logo.png" className={styles.logo}></img>
           <ul className={styles.ul}>
             <li className={styles.list}>
               <Link to="/" className={styles.text}>
@@ -21,6 +21,16 @@ export default function Nav() {
             <li className={styles.list}>
               <Link to="/allPets" className={styles.text}>
                 Available Pets
+              </Link>
+            </li>
+            <li className={styles.list}>
+              <Link to="/register" className={styles.text}>
+                Register
+              </Link>
+            </li>
+            <li className={styles.list}>
+              <Link to="/login" className={styles.text}>
+              Login
               </Link>
             </li>
           </ul>

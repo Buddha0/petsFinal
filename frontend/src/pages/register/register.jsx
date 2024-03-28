@@ -1,25 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./register.module.css";
 
 export default function Register() {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  function formSubmit() {
+  
+  }
+
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={formSubmit}>
       <p className={styles.title}>Sign Up</p>
       <p className={styles.message}>
         Signup now and get full access to our app.
       </p>
-      <div className={styles.flex}>
-        <label>
-          <input className={styles.input} type="text" placeholder="" required />
-          <span>Firstname</span>
-        </label>
 
-        <label>
-          <input className={styles.input} type="text" placeholder="" required />
-          <span>Lastname</span>
-        </label>
-      </div>
+      <label>
+        <input className={styles.input} type="text" placeholder="" required />
+        <span>Name</span>
+      </label>
 
       <label>
         <input className={styles.input} type="number" placeholder="" required />

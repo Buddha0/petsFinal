@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./login.module.css";
 
 export default function Register() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  function submitForm(){
+    
+  }
+
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={submitForm}>
       <p className={styles.title}>Login</p>
       <p className={styles.message}>Welcome back!</p>
 
