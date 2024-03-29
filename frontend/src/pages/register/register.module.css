@@ -7,8 +7,8 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.form_container{
-    width:100%;
+.form_container {
+    width: 100%;
     min-height: 90vh;
     display: flex;
     justify-content: center;
@@ -19,7 +19,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width:100%;
+    width: 100%;
     max-width: 400px;
     padding: 20px;
     border-radius: 20px;
@@ -63,6 +63,11 @@
     gap: 6px;
 }
 
+.name {
+    display: flex;
+    gap: 10px;
+}
+
 .form label {
     position: relative;
 }
@@ -85,6 +90,17 @@
     font-size: 0.9em;
     cursor: text;
     transition: 0.3s ease;
+}
+
+.input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.input[type="number"]::-webkit-inner-spin-button,
+.input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .form label .input:placeholder-shown+span {

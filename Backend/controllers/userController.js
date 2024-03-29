@@ -12,16 +12,16 @@ export const userData = asyncErrorHandling(async (req, res) => {
 })
 
 export const register = asyncErrorHandling(async (req, res) => {
-    const { name, email, password } = req.body
+    const { firstname, lastname, number, email, password, confirmPassword } = req.body
 
-    if (!name || !email || !password) return errorHanlder(createError("you cannot leave any of these empty"), req, res)
+    if (!firstname || !lastname || !number || !email || !password || !confirmPassword) return errorHanlder(createError("you cannot leave any of these empty"), req, res)
 
     const ifExists = await user.findOne({ email })
 
     if (ifExists) return errorHanlder(createError("this email already exists"), req, res)
 
     const newUser = await user.create({
-        name, email, password
+        firstname, lastname, number, email, password, confirmPassword
     })
     getToken(newUser, 200, res, "registration and token generation successfull")
 })

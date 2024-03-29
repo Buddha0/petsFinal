@@ -5,11 +5,23 @@ import jwt from 'jsonwebtoken'
 
 
 const userSchema = new mongoose.Schema({
-    name: {
+    firstname: {
         type: String,
         required: [true, "you cannot leave this empty"],
-        minLength: [3, "name cannot be this short"],
-        maxLength: [25, "name cannot be this long"]
+        minLength: [3, "first name cannot be this short"],
+        maxLength: [25, "first name cannot be this long"]
+    },
+    lastname: {
+        type: String,
+        required: [true, "you cannot leave this empty"],
+        minLength: [3, "last name cannot be this short"],
+        maxLength: [25, "last name cannot be this long"]
+    },
+    number: {
+        type: Number,
+        required: [true, "you cannot leave this empty"],
+        minLength: [8, "number cannot be this short"],
+        maxLength: [10, "number cannot be this long"]
     },
     email: {
         type: String,
@@ -21,6 +33,16 @@ const userSchema = new mongoose.Schema({
         required: [true, "you cannot leave this empty"],
         select: false
     },
+    confirmPassword: {
+        type: String,
+        required: [true, "Please confirm your password"],
+        validate: {
+            validator: function (value) {
+                return this.password === value;
+            },
+            message: "Passwords do not match"
+        }
+    }
 })
 
 userSchema.pre("save", async function (next) {
@@ -30,6 +52,7 @@ userSchema.pre("save", async function (next) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
     this.password = hashedPassword;
+    this.confirmPassword = undefined;
     next();
 });
 

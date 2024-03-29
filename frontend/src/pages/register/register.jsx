@@ -1,21 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./register.module.css";
-import Nav from "../../components/nav/nav";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
 
   const postData = {
-    name,
-    email,
-    password,
+    firstname: firstName,
+    lastname: lastName,
+    number: number,
+    email: email,
+    password: password,
+    confirmPassword: confirmPassword,
   };
 
   function formSubmit(e) {
@@ -25,23 +30,25 @@ export default function Register() {
       .post("http://localhost:3000/petFinder/user/register", postData)
       .then((response) => {
         console.log("Response:", response.data);
-        localStorage.setItem("jwtToken",response?.data?.jwtToken)
+        localStorage.setItem("jwtToken", response?.data?.jwtToken);
         localStorage.setItem("user", JSON.stringify(response?.data?.user));
         navigate("/");
       })
       .catch((error) => {
-        alert("Something went wrong")
+        alert("Something went wrong");
         console.error("Error:", error);
       });
 
-    setName("");
+    setFirstName("");
+    setLastName("");
+    setNumber("");
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
   }
 
   return (
     <>
-      <Nav />
       <div className={styles.form_container}>
         <form className={styles.form} onSubmit={formSubmit}>
           <p className={styles.title}>Sign Up</p>
@@ -49,27 +56,43 @@ export default function Register() {
             Signup now and get full access to our app.
           </p>
 
-          <label>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder=""
-              required
-              onChange={(e) => setName(e.target.value)}
-              value= {name}
-            />
-            <span>Name</span>
-          </label>
+          <div className={styles.name}>
+            <label>
+              <input
+                className={styles.input}
+                type="text"
+                placeholder=""
+                // ref={firstName}
+                required
+                onChange={(e) => setFirstName(e.target.value)}
+                value={firstName}
+              />
+              <span>First name</span>
+            </label>
+            <label>
+              <input
+                className={styles.input}
+                type="text"
+                placeholder=""
+                required
+                onChange={(e) => setLastName(e.target.value)}
+                value={lastName}
+              />
+              <span>Last name</span>
+            </label>
+          </div>
 
-          {/* <label>
+          <label>
             <input
               className={styles.input}
               type="number"
               placeholder=""
               required
+              onChange={(e) => setNumber(e.target.value)}
+              value={number}
             />
             <span>Number</span>
-          </label> */}
+          </label>
 
           <label>
             <input
@@ -90,20 +113,22 @@ export default function Register() {
               placeholder=""
               required
               onChange={(e) => setPassword(e.target.value)}
-              value = {password}
+              value={password}
             />
             <span>Password</span>
           </label>
 
-          {/* <label>
+          <label>
             <input
               className={styles.input}
               type="password"
               placeholder=""
               required
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
             />
             <span>Confirm password</span>
-          </label> */}
+          </label>
 
           <button className={styles.submit} type="submit">
             Register

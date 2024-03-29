@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./login.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -16,19 +16,18 @@ export default function Register() {
   };
 
   function formSubmit(e) {
-
     e.preventDefault();
 
     axios
       .post("http://localhost:3000/petFinder/user/login", postData)
       .then((response) => {
         console.log("Response:", response.data);
-        localStorage.setItem("jwtToken",response?.data?.jwtToken)
+        localStorage.setItem("jwtToken", response?.data?.jwtToken);
         localStorage.setItem("user", JSON.stringify(response?.data?.user));
         navigate("/");
       })
       .catch((error) => {
-        alert("Something went wrong")
+        alert("Something went wrong");
         console.error("Error:", error);
       });
 
@@ -48,7 +47,7 @@ export default function Register() {
           placeholder=""
           required
           onChange={(e) => setEmail(e.target.value)}
-          value = {email}
+          value={email}
         />
         <span>Email</span>
       </label>
@@ -59,17 +58,15 @@ export default function Register() {
           type="password"
           placeholder=""
           required
-          onChange={(e)=>setPassword(e.target.value)}
-          value = {password}
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
         />
         <span>Password</span>
       </label>
 
-
-        <button className={styles.submit} type="submit">
-          Login
-        </button>
-  
+      <button className={styles.submit} type="submit">
+        Login
+      </button>
 
       <p className={styles.signin}>
         Don't have an account? <Link to="/Register">Register</Link>
