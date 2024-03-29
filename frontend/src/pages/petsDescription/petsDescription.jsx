@@ -9,26 +9,37 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 
 export default function PetsDescription() {
     const [pets, setPets] = useState([]);
-    const [pet,setPet] = useState([])
-    const {id} = useParams()
+    const [pet, setPet] = useState([])
+    const { id } = useParams()
+    const [img, setImg] = useState(null);
 
-   
-
-  useEffect(()=>{
-    axios
-    .get(`http://localhost:3000/petFinder/selected/${id}`)
-    .then(function (response) {
-        setPet(response.data.getPetData);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-  },[id])
-
-  
 
     useEffect(() => {
-   
+
+
+        const image = new Image();
+        image.src = pet?.image?.url;
+        image.onload = () => {
+            setImg(image);
+        };
+
+    }, [id, pet]);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:3000/petFinder/selected/${id}`)
+            .then(function (response) {
+                setPet(response.data.getPetData);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [id])
+
+
+
+    useEffect(() => {
+
 
         axios
             .get("http://localhost:3000/petFinder/get")
@@ -46,23 +57,33 @@ export default function PetsDescription() {
     return (
         <>
             <Nav />
-          
-            <div className={styles.img_container}>
-                <img src={pet?.image?.url}className={styles.img_blur}></img>
-                <img src={pet?.image?.url} className={styles.img}></img>
-                <Link to = '/allPets' className={styles.link}>
-                <IoIosArrowRoundBack className={styles.backArrow}/>
-                </Link>
 
-               
+            <div className={styles.img_container}>
+                {(img === null) ?
+
+                    <>
+                        <div className={styles.skeletonLoading_big}></div>
+                        <div className={styles.skeletonLoading_small}></div>
+
+                    </>
+                    : <>
+                        <img src={pet?.image?.url} className={styles.img_blur}></img>
+                        <img src={pet?.image?.url} className={styles.img}></img>
+                        <Link to='/allPets' className={styles.link}>
+                            <IoIosArrowRoundBack className={styles.backArrow} />
+                        </Link>
+                    </>
+                }
+
+
             </div>
 
             <div className={styles.container}>
                 <div className={styles.description_container}>
-              
-                  
+
+
                     <h1 className={styles.heading}>{pet?.name}</h1>
-                
+
 
                     <div className={styles.buttons}>
                         <button className={`${styles.button} ${styles.button1}`}>
@@ -80,7 +101,7 @@ export default function PetsDescription() {
                 <div className={styles.morePets}>
                     <h1>More Pets You Might Like</h1>
                     <div className={styles.cards}>
-                        {pets.slice(0, 4).filter((data)=>data._id !== id).map((pets) => {
+                        {pets.slice(0, 4).filter((data) => data._id !== id).map((pets) => {
                             return <Card pet={pets} key={pets.id} />;
                         })}
                     </div>

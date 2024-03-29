@@ -5,38 +5,38 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Link } from "react-router-dom";
 
 export default function Card({ pet }) {
-    const [img, setImg] = useState(null); // Initialize img state as null
+    const [img, setImg] = useState(null);
 
- 
-    // Fetch the image when the component mounts or when pet changes
+
+
     useEffect(() => {
-        // Check if the pet has an image URL
-        if (pet?.image?.url) {
-            const image = new Image();
-            image.src = pet.image.url;
-            image.onload = () => {
-                setImg(image);
-            };
-        }
+        const image = new Image();
+        image.src = pet.image.url;
+        image.onload = () => {
+            setImg(image);
+        };
+
     }, [pet]);
 
     return (
         <div className={styles.card} key={pet.id}>
-            {/* Show skeleton loading when img is null or loading */}
-            {(img === null) && <div className={styles.skeletonLoading}></div>}
 
-            {/* Show LazyLoadImage when img is loaded */}
-            <Link to = {`/petDescription/${pet._id}`} onClick={()=>window.scrollTo(0,0)}>
-            {img && (
-                <LazyLoadImage
-                    src={img.src}
-                    className={styles.card_img}
-                    alt={pet.name}
-                />
-            )}
-            </Link>
-           
+            {(img === null) ?
+                    <div className={styles.skeletonLoading}></div> 
+                : <>
+                    <Link to={`/petDescription/${pet._id}`} onClick={() => window.scrollTo(0, 0)}>
+                        {
+                            <img
+                                src={img.src}
+                                className={styles.card_img}
+                                alt={pet.name}
+                            />
+                        }
+                    </Link>
+                </>
+            }
 
+        
             <div className={styles.description_container}>
                 <div className={styles.description_one}>
                     <h2 className={styles.name}>{pet.name}</h2>
