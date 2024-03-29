@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "./register.module.css";
 import axios from "axios";
@@ -11,23 +11,28 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const navigate = useNavigate();
 
-  const postData = {
-    firstname: firstName,
-    lastname: lastName,
-    number: number,
-    email: email,
-    password: password,
-    confirmPassword: confirmPassword,
-  };
+  const firstNameRef = useRef();
+
+  useEffect(() => {
+    firstNameRef.current.focus();
+  }, []);
 
   function formSubmit(e) {
     e.preventDefault();
 
+    const formData = {
+      firstName,
+      lastName,
+      number,
+      email,
+      password,
+      confirmPassword,
+    };
+
     axios
-      .post("http://localhost:3000/petFinder/user/register", postData)
+      .post("http://localhost:3000/petFinder/user/register", formData)
       .then((response) => {
         console.log("Response:", response.data);
         localStorage.setItem("jwtToken", response?.data?.jwtToken);
@@ -59,10 +64,10 @@ export default function Register() {
           <div className={styles.name}>
             <label>
               <input
+                ref={firstNameRef}
                 className={styles.input}
                 type="text"
                 placeholder=""
-                // ref={firstName}
                 required
                 onChange={(e) => setFirstName(e.target.value)}
                 value={firstName}

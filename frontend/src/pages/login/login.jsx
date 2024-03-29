@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./login.module.css";
 import axios from "axios";
@@ -9,6 +9,12 @@ export default function Register() {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+
+  const emailRef = useRef();
+
+  useEffect(() => {
+    emailRef.current.focus();
+  });
 
   const postData = {
     email,
@@ -44,6 +50,7 @@ export default function Register() {
         <input
           className={styles.input}
           type="email"
+          ref={emailRef}
           placeholder=""
           required
           onChange={(e) => setEmail(e.target.value)}
