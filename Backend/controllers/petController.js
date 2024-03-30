@@ -2,20 +2,15 @@ import cloudinary from 'cloudinary'
 import { Pet } from "../models/petModel.js"
 import { asyncErrorHandling } from "../middlewares/asyncErrorHandler.js"
 import { createError, errorHanlder } from "../middlewares/errorHandling.js"
-
-
-export const getpets = asyncErrorHandling(async (req, res) => {
-    const getallpets = await Pet.find()
-    res.send({
-        success: true,
-        message: "got all pets",
-        getallpets
-
-    })
-})
+import { user } from "../models/userModel.js"
 
 export const postPets = asyncErrorHandling(async (req, res, next) => {
+    const { role } = req.user
+    if (role == "Customer") return errorHanlder(createError("you don't have access to this feature"), req, res)
+
     const { name, category, age, description, breed, gender } = req.body
+    const userId = req.user.id
+
     if (!name || !category || !age || !description || !breed || !gender) {
         return errorHanlder(createError("you cannot leave any of these empty"), req, res)
     }
@@ -38,7 +33,7 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
     }
 
     const post = await Pet.create({
-        name, age, category, description, breed, gender, image: {
+        name, age, category, description, breed, gender, userId, image: {
             public_id: cloudinaryResponse.public_id,
             url: cloudinaryResponse.secure_url
         }
@@ -47,6 +42,16 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         success: true,
         message: "posted about pets",
         post
+    })
+})
+
+export const getpets = asyncErrorHandling(async (req, res) => {
+    const getallpets = await Pet.find()
+    res.send({
+        success: true,
+        message: "got all pets",
+        getallpets
+
     })
 })
 
@@ -90,7 +95,28 @@ export const getOther = asyncErrorHandling(async (req, res) => {
     });
 });
 
+export const showPets = asyncErrorHandling(async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return next(new Error("Couldn't find the pet"));
+    }
+
+    const getPetData = await Pet.findById(id);
+    if (!getPetData) {
+        return next(new Error('Pet not found'));
+    }
+
+    res.send({
+        success: true,
+        getPetData
+    });
+});
+
 export const deletePet = asyncErrorHandling(async (req, res) => {
+    const { role } = req.user
+    if (role == "Customer") return errorHanlder(createError("you don't have access to this feature"), req, res)
+
     const { id } = req.params;
 
     let petToDelete = await Pet.findById(id);
@@ -107,6 +133,9 @@ export const deletePet = asyncErrorHandling(async (req, res) => {
 });
 
 export const updatePet = asyncErrorHandling(async (req, res) => {
+    const { role } = req.user
+    if (role == "Customer") return errorHanlder(createError("you don't have access to this feature"), req, res)
+
     const { id } = req.params;
 
     let petToUpdate = await Pet.findById(id);
@@ -157,22 +186,4 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
             updatedPet
         });
     }
-});
-
-export const showPets = asyncErrorHandling(async (req, res, next) => {
-    const { id } = req.params;
-
-    if (!id) {
-        return next(new Error("Couldn't find the pet"));
-    }
-
-    const getPetData = await Pet.findById(id);
-    if (!getPetData) {
-        return next(new Error('Pet not found'));
-    }
-
-    res.send({
-        success: true,
-        getPetData
-    });
 });

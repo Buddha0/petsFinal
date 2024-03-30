@@ -12,25 +12,25 @@ export const userData = asyncErrorHandling(async (req, res) => {
 })
 
 export const register = asyncErrorHandling(async (req, res) => {
-    const { firstname, lastname, number, email, password, confirmPassword } = req.body
+    const { firstname, lastname, number, email, password, confirmPassword, role } = req.body
 
-    if (!firstname || !lastname || !number || !email || !password || !confirmPassword) return errorHanlder(createError("you cannot leave any of these empty"), req, res)
+    if (!firstname || !lastname || !number || !email || !password || !confirmPassword || !role) return errorHanlder(createError("you cannot leave any of these empty"), req, res)
 
     const ifExists = await user.findOne({ email })
 
     if (ifExists) return errorHanlder(createError("this email already exists"), req, res)
 
     const newUser = await user.create({
-        firstname, lastname, number, email, password, confirmPassword
+        firstname, lastname, number, email, password, confirmPassword, role
     })
     getToken(newUser, 200, res, "registration and token generation successfull")
 })
 
 
 export const login = asyncErrorHandling(async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, role } = req.body
 
-    if (!email || !password) return errorHanlder(createError("User info not found"), req, res)
+    if (!email || !password || !role) return errorHanlder(createError("User info not found"), req, res)
 
     const userInfo = await user.findOne({ email }).select("+password")
     if (!userInfo) return errorHanlder(createError("User not Found"), req, res)
@@ -39,13 +39,26 @@ export const login = asyncErrorHandling(async (req, res) => {
     if (!confirmPass) {
         return errorHanlder(createError("email or password is incorrect"), req, res)
     }
+    console.log(req.user)
+
     getToken(userInfo, 200, res, "login and token generation successfull")
 })
 
 export const getLoggedInUser = asyncErrorHandling(async (req, res) => {
     const loggedInUser = await req.user
+    console.log(req.user)
     res.send({
         success: true,
         loggedInUser
+    })
+})
+
+export const logout = asyncErrorHandling(async (req, res) => {
+    res.status(201).cookie("token", "", {
+        httpOnly: true,
+        expires: new Date(Date.now())
+    }).json({
+        success: true,
+        message: "logged out",
     })
 })

@@ -35,7 +35,7 @@ const petSchema = new mongoose.Schema({
         minLength: [25, "description cannot be this short"],
         maxLength: [1000, "description cannot be this long"],
     },
-    image: {
+    image: [{
         public_id: {
             type: String,
             required: true
@@ -44,9 +44,12 @@ const petSchema = new mongoose.Schema({
             type: String,
             required: true
         }
+    }],
+    date: {
+        type: Date,
+        default: Date.now
     }
 });
-
 
 
 export const Pet = mongoose.model("PetsData", petSchema);

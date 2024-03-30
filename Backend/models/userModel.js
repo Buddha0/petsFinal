@@ -1,8 +1,7 @@
-import mongoose from "mongoose"
-import validator from "validator"
-import bcrypt from "bcrypt"
-import jwt from 'jsonwebtoken'
-
+import mongoose from "mongoose";
+import validator from "validator";
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
     firstname: {
@@ -42,8 +41,12 @@ const userSchema = new mongoose.Schema({
             },
             message: "Passwords do not match"
         }
+    },
+    role: {
+        type: String,
+        enum: ["Admin", "Customer"]
     }
-})
+});
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
@@ -57,8 +60,8 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.comparePassword = async function (pass) {
-    return await bcrypt.compare(pass, this.password)
-}
+    return await bcrypt.compare(pass, this.password);
+};
 
 userSchema.methods.getJWTToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_KEY, {
@@ -66,4 +69,4 @@ userSchema.methods.getJWTToken = function () {
     });
 };
 
-export const user = mongoose.model("users", userSchema)
+export const user = mongoose.model("User", userSchema);

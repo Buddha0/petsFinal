@@ -1,7 +1,7 @@
 import { asyncErrorHandling } from "../middlewares/asyncErrorHandler.js"
 import { errorHanlder, createError } from "../middlewares/errorHandling.js"
 import jwt from "jsonwebtoken";
-import { user } from "../models/userModel.js";
+import { user } from "../models/userModel.js"
 
 export const isAuthorized = asyncErrorHandling(async (req, res, next) => {
     const { token } = req.cookies;
@@ -13,8 +13,10 @@ export const isAuthorized = asyncErrorHandling(async (req, res, next) => {
     try {
         const decodedId = jwt.verify(token, process.env.JWT_KEY);
         req.user = await user.findById(decodedId.id);
+        console.log("Retrieved user data:", req.user);
         next();
     } catch (error) {
+        console.error("Authorization error:", error);
         if (error.name === 'JsonWebTokenError') {
             return errorHanlder(createError("Invalid token", 401), req, res);
         } else {
