@@ -8,7 +8,7 @@ export default function Nav() {
 
   useEffect(() => {
     const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-    console.log("User from localStorage:", userFromLocalStorage.firstName);
+    // console.log("User from localStorage:", userFromLocalStorage.firstName);
     if (userFromLocalStorage) {
       setLoggedInUser(userFromLocalStorage);
     }
