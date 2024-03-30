@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -14,26 +15,27 @@ export default function Register() {
 
   useEffect(() => {
     emailRef.current.focus();
-  });
-
-  const postData = {
-    email,
-    password,
-  };
+  }, []);
 
   function formSubmit(e) {
     e.preventDefault();
+
+    const postData = {
+      email,
+      password,
+    };
 
     axios
       .post("http://localhost:3000/petFinder/user/login", postData)
       .then((response) => {
         console.log("Response:", response.data);
+        setMessage("Login success");
         localStorage.setItem("jwtToken", response?.data?.jwtToken);
         localStorage.setItem("user", JSON.stringify(response?.data?.user));
-        navigate("/");
+        navigate("/"); // Navigate to the home page
       })
       .catch((error) => {
-        alert("Something went wrong");
+        setMessage("Something went wrong");
         console.error("Error:", error);
       });
 
@@ -78,6 +80,8 @@ export default function Register() {
       <p className={styles.signin}>
         Don't have an account? <Link to="/Register">Register</Link>
       </p>
+
+      {message && <p className={styles.message}>{message}</p>}
     </form>
   );
 }

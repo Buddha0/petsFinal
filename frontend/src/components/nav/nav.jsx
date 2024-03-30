@@ -2,28 +2,27 @@ import { useEffect, useState } from "react";
 import styles from "./nav.module.css";
 import { Link } from "react-router-dom";
 
-
 export default function Nav() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [showDropDown, setShowDropDown] = useState(false);
 
-  const [loggedInUser, setLoggedInUser] = useState(null)
-  const [showDropDown, setShowDropDown] = useState(false)
   useEffect(() => {
     const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+    console.log("User from localStorage:", userFromLocalStorage.firstName);
     if (userFromLocalStorage) {
       setLoggedInUser(userFromLocalStorage);
     }
   }, []);
 
   function handleLogOutClick() {
-    localStorage.clear()
-    setShowDropDown(false)
-    setLoggedInUser(null)
+    localStorage.clear();
+    setShowDropDown(false);
+    setLoggedInUser(null);
   }
 
-  function handleSettingClick(){
-    setShowDropDown(false)
+  function handleSettingClick() {
+    setShowDropDown(false);
   }
-
 
   return (
     <>
@@ -47,12 +46,10 @@ export default function Nav() {
               </Link>
             </li>
 
-            {
-              !loggedInUser &&
+            {!loggedInUser && (
               <>
                 <li className={styles.list}>
-
-                  <Link to="/register" className={styles.text} >
+                  <Link to="/register" className={styles.text}>
                     Register
                   </Link>
                 </li>
@@ -62,26 +59,37 @@ export default function Nav() {
                   </Link>
                 </li>
               </>
-            }
-
+            )}
 
             <li className={styles.list}>
-              {
-                loggedInUser &&
-
+              {loggedInUser && (
                 <div className={styles.dropDown_container}>
-                  <p className={styles.text} onClick={() => setShowDropDown(!showDropDown)}> Welcome, {loggedInUser.name} </p>
+                  <p
+                    className={styles.text}
+                    onClick={() => setShowDropDown(!showDropDown)}
+                  >
+                    {" "}
+                    Welcome, {loggedInUser.firstName}{" "}
+                  </p>
 
-                  {showDropDown && <div className={styles.dropDown}>
-                    <p className={`${styles.text} ${styles.drop}`} onClick={handleSettingClick}>Settings</p>
-                    <p className={`${styles.text} ${styles.drop}`} onClick={handleLogOutClick}>Logout</p>
-
-                  </div>}
-
+                  {showDropDown && (
+                    <div className={styles.dropDown}>
+                      <p
+                        className={`${styles.text} ${styles.drop}`}
+                        onClick={handleSettingClick}
+                      >
+                        Settings
+                      </p>
+                      <p
+                        className={`${styles.text} ${styles.drop}`}
+                        onClick={handleLogOutClick}
+                      >
+                        Logout
+                      </p>
+                    </div>
+                  )}
                 </div>
-
-              }
-
+              )}
             </li>
           </ul>
         </div>
