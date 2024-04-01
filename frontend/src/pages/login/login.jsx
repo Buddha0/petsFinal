@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Customer");
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function Register() {
     const postData = {
       email,
       password,
+      role,
     };
 
     axios
@@ -32,7 +34,7 @@ export default function Register() {
         setMessage("Login success");
         localStorage.setItem("jwtToken", response?.data?.jwtToken);
         localStorage.setItem("user", JSON.stringify(response?.data?.user));
-        navigate("/"); // Navigate to the home page
+        navigate("/");
       })
       .catch((error) => {
         setMessage("Something went wrong");
@@ -41,6 +43,7 @@ export default function Register() {
 
     setEmail("");
     setPassword("");
+    setRole("Customer");
   }
 
   return (
@@ -71,6 +74,18 @@ export default function Register() {
           value={password}
         />
         <span>Password</span>
+      </label>
+
+      <label>
+        <span>Role:</span>
+        <select
+          className={styles.select}
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value="Customer">Customer</option>
+          <option value="Admin">Admin</option>
+        </select>
       </label>
 
       <button className={styles.submit} type="submit">

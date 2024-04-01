@@ -11,7 +11,7 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         return res.status(403).json({ error: "You don't have access to this feature" });
     }
 
-    const { name, category, age, description, breed, gender } = req.body;
+    const { name, category, age, description, breed, gender, available } = req.body;
     const createdBy = req.user.id;
 
     if (!name || !category || !age || !description || !breed || !gender) {
@@ -45,7 +45,7 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
     }
 
     const post = await Pet.create({
-        name, age, category, description, breed, gender, createdBy, image: uploadedImages
+        name, age, category, description, breed, gender, createdBy, image: uploadedImages, available
     });
 
     res.status(200).json({
@@ -56,7 +56,7 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
 })
 
 export const getpets = asyncErrorHandling(async (req, res) => {
-    const getallpets = await Pet.find()
+    const getallpets = await Pet.find({ available: true })
     res.send({
         success: true,
         message: "got all pets",
@@ -153,46 +153,39 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
         return errorHanlder(createError("Could not find the pet"), req, res);
     }
 
-    const { images } = req.files;
+    if (req.files && req.files.images && req.files.images.length > 0) {
+        const { images } = req.files;
+        const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 
-    if (!images || !Array.isArray(images)) {
-        return errorHanlder(createError("Please provide two or more images"), req, res);
-    }
-
-    const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
-
-    for (const image of images) {
-        if (!allowedExtensions.includes(image.mimetype)) {
-            return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res);
+        for (const image of images) {
+            if (!allowedExtensions.includes(image.mimetype)) {
+                return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res);
+            }
         }
-    }
 
-    const uploadedImages = [];
+        const uploadedImages = [];
 
-    for (const image of images) {
-        const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
-        if (!cloudinaryResponse || cloudinaryResponse.error) {
-            console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
-            return errorHanlder(createError("Failed to upload images"), req, res);
+        for (const image of images) {
+            const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
+            if (!cloudinaryResponse || cloudinaryResponse.error) {
+                console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
+                return errorHanlder(createError("Failed to upload images"), req, res);
+            }
+            uploadedImages.push({
+                public_id: cloudinaryResponse.public_id,
+                url: cloudinaryResponse.secure_url
+            });
         }
-        uploadedImages.push({
-            public_id: cloudinaryResponse.public_id,
-            url: cloudinaryResponse.secure_url
-        });
+        petToUpdate.image = uploadedImages;
     }
 
-    const updatedPet = await Pet.findByIdAndUpdate(id, {
-        ...req.body,
-        image: uploadedImages
-    }, {
-        returnOriginal: false,
-        runValidators: true,
-        useFindAndModify: false
-    });
+    Object.assign(petToUpdate, req.body);
+
+    const updatedPet = await petToUpdate.save();
 
     res.status(200).send({
         success: true,
-        message: "Pet data updated successfully with new images",
+        message: "Pet data updated successfully",
         updatedPet
     });
 });
@@ -241,4 +234,3 @@ export const veiwFavPet = asyncErrorHandling(async (req, res) => {
         favorites: fav,
     });
 })
-

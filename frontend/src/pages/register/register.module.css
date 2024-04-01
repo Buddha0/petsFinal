@@ -134,3 +134,43 @@
 .submit:hover {
     background-color: #00bfff96;
 }
+
+
+.select {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    padding: 0px 10px 0px 10px;
+    outline: none;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 10px;
+    font-size: medium;
+    height: 50px;
+}
+
+.select option {
+    background-color: #333;
+    color: #fff;
+    font-size: medium;
+}
+
+.select::after {
+    content: "\25BC";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.select:hover::after {
+    color: #00bfff;
+}
+
+.select:focus::after {
+    color: #00bfff;
+}
+
+.select:valid::after {
+    color: #00bfff;
+}

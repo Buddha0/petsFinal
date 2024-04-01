@@ -11,6 +11,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("Customer");
   const navigate = useNavigate();
 
   const firstNameRef = useRef();
@@ -29,10 +30,11 @@ export default function Register() {
       email,
       password,
       confirmPassword,
+      role,
     };
-
+    console.log(formData);
     axios
-      .post("http://localhost:3000/petFinder/user/register", formData)
+      .post("http://localhost:3000/petfinder/user/register", formData)
       .then((response) => {
         console.log("Response:", response.data);
         localStorage.setItem("jwtToken", response?.data?.jwtToken);
@@ -50,6 +52,7 @@ export default function Register() {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setRole("Customer");
   }
 
   return (
@@ -133,6 +136,18 @@ export default function Register() {
               value={confirmPassword}
             />
             <span>Confirm password</span>
+          </label>
+
+          <label>
+            <span>Role:</span>
+            <select
+              className={styles.select}
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="Customer">Customer</option>
+              <option value="Admin">Admin</option>
+            </select>
           </label>
 
           <button className={styles.submit} type="submit">

@@ -23,6 +23,7 @@ export const register = asyncErrorHandling(async (req, res) => {
     const newUser = await user.create({
         firstname, lastname, number, email, password, confirmPassword, role
     })
+    console.log(newUser)
     getToken(newUser, 200, res, "registration and token generation successfull")
 })
 

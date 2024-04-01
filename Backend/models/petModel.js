@@ -52,6 +52,10 @@ const petSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Types.ObjectId,
         ref: "User"
+    },
+    available: {
+        type: Boolean,
+        default: "true"
     }
 });
 
