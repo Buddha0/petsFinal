@@ -3,7 +3,7 @@ import { Pet } from "../models/petModel.js"
 import { asyncErrorHandling } from "../middlewares/asyncErrorHandler.js"
 import { createError, errorHanlder } from "../middlewares/errorHandling.js"
 import { user } from "../models/userModel.js"
-
+import { Favorite } from "../models/favModel.js"
 
 export const postPets = asyncErrorHandling(async (req, res, next) => {
     const { role } = req.user;
@@ -190,47 +190,63 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
     });
 });
 
+export const addFav = asyncErrorHandling(async (req, res) => {
+    const { id: userId } = req.user
 
-export const addToFav = asyncErrorHandling(async (req, res) => {
-    const { role, id: userId } = req.user;
-    if (role === "Admin") {
-        return errorHanlder(createError("You don't have access to this feature"), req, res);
+    if (!userId) return errorHanlder(createError("not user found"), req, res)
+
+    const { id: petId } = req.params;
+
+    if (!petId) return errorHanlder(createError("No pet found"), req, res);
+
+    const existingFavorite = await Favorite.findOne({ user: userId, pet: petId });
+
+    if (existingFavorite) {
+        return res.status(400).json({ success: false, message: 'Pet already exists in favorites' });
     }
 
-    const { id } = req.params;
-    if (!id) {
-        return errorHanlder(createError("Pet not found"), req, res);
+    // Add the pet to the user's favorites list
+    const favorite = new Favorite({ user: userId, pet: petId });
+    await favorite.save();
+
+    return res.status(200).json({ success: true, message: 'Pet added to favorites successfully' });
+
+})
+
+export const getFav = asyncErrorHandling(async (req, res) => {
+    const { id: userId } = req.user
+
+    if (!userId) return errorHanlder(createError("no user found"), req, res)
+
+    const users = await user.findById(userId);
+    if (!users) {
+        return errorHanlder(createError("User not found"), req, res);
     }
 
-    const result = await user.findOneAndUpdate(
-        { _id: userId, 'favorites': { $ne: id } },
-        { $push: { favorites: id } },
-        { new: true }
-    );
+    // Query the Favorite collection to get the favorite pets of the user
+    const favorites = await Favorite.find({ user: userId }).populate('pet');
 
-    if (!result) {
-        return errorHanlder(createError("Pet already in favorites"), req, res);
+    return res.status(200).json({ success: true, favorites });
+})
+
+export const deleteFav = asyncErrorHandling(async (req, res) => {
+    const { id: userId } = req.user
+
+    if (!userId) return errorHanlder(createError("no user found"), req, res)
+
+    const { id } = req.params
+
+    if (!id) return errorHanlder(createError("no pet found"), req, res)
+
+    const favoriteToDelete = await Favorite.findOne({ user: userId, pet: id });
+
+    if (!favoriteToDelete) {
+        return errorHanlder(createError("Pet not found in favorites"), req, res);
     }
 
-    res.send({
-        success: true,
-        message: "Pet added to favorites successfully!",
-    });
-});
+    await Favorite.deleteOne(favoriteToDelete);
 
-export const veiwFavPet = asyncErrorHandling(async (req, res) => {
-    const { role, id: userId } = req.user
+    return res.status(200).json({ success: true, message: 'Pet removed from favorites successfully' });
 
-    if (role == "Admin") return errorHanlder(createError("you don't have access to this feature"), req, res)
 
-    const favUser = await user.findById(userId).populate('favorites')
-
-    if (!favUser) return errorHanlder(createError("User not found"), req, res)
-
-    const fav = favUser.favorites
-
-    res.send({
-        success: true,
-        favorites: fav,
-    });
 })

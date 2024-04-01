@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuthorized } from "../middlewares/auth.js"
-import { getCat, getDogs, getOther, getpets, postPets, deletePet, updatePet, showPets, addToFav, veiwFavPet } from "../controllers/petController.js"
+import { getCat, getDogs, getOther, getpets, postPets, deletePet, updatePet, showPets, addFav, getFav, deleteFav } from "../controllers/petController.js"
 
 const router = express.Router();
 
@@ -12,10 +12,9 @@ router.get("/others", getOther);
 router.delete("/delete/:id", isAuthorized, deletePet);
 router.put("/update/:id", isAuthorized, updatePet);
 router.get("/selected/:id", showPets);
-router.post("/addfav/:id", isAuthorized, addToFav);
-router.get("/viewfav", isAuthorized, veiwFavPet);
-// router.delete("/deletefav/:id", isAuthorized, deleteFromFav);
-
+router.post("/addfav/:id", isAuthorized, addFav);
+router.get("/getfav", isAuthorized, getFav)
+router.delete("/removefav/:id", isAuthorized, deleteFav)
 
 
 export default router;

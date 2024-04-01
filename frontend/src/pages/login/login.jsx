@@ -26,6 +26,7 @@ export default function Register() {
       password,
       role,
     };
+    console.log(postData);
 
     axios
       .post("http://localhost:3000/petFinder/user/login", postData)
