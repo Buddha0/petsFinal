@@ -48,6 +48,10 @@ const petSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    createdBy: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     }
 });
 

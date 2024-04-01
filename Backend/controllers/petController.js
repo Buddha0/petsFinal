@@ -4,45 +4,55 @@ import { asyncErrorHandling } from "../middlewares/asyncErrorHandler.js"
 import { createError, errorHanlder } from "../middlewares/errorHandling.js"
 import { user } from "../models/userModel.js"
 
-export const postPets = asyncErrorHandling(async (req, res, next) => {
-    const { role } = req.user
-    if (role == "Customer") return errorHanlder(createError("you don't have access to this feature"), req, res)
 
-    const { name, category, age, description, breed, gender } = req.body
-    const userId = req.user.id
+export const postPets = asyncErrorHandling(async (req, res, next) => {
+    const { role } = req.user;
+    if (role === "Customer") {
+        return res.status(403).json({ error: "You don't have access to this feature" });
+    }
+
+    const { name, category, age, description, breed, gender } = req.body;
+    const createdBy = req.user.id;
 
     if (!name || !category || !age || !description || !breed || !gender) {
-        return errorHanlder(createError("you cannot leave any of these empty"), req, res)
-    }
-    const { image } = req.files;
-
-    if (!req.files || !req.files.image) {
-        return errorHanlder(createError("Please upload the image"), req, res);
+        return res.status(400).json({ error: "Please provide all required fields" });
     }
 
-    const allowedExtension = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
-
-    if (!allowedExtension.includes(image.mimetype)) {
-        return errorHanlder(createError("Please upload the image in PNG, JPEG, JPG, or WEBP format"), req, res);
+    const { images } = req.files;
+    if (!images || !Array.isArray(images)) {
+        return res.status(400).json({ error: "Please provide two or more images" });
     }
 
-    const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
-    if (!cloudinaryResponse || cloudinaryResponse.error) {
-        console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
-        return errorHanlder(createError("Failed to upload"), req, res);
+    const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    for (const image of images) {
+        if (!allowedExtensions.includes(image.mimetype)) {
+            return res.status(400).json({ error: "Please upload images in PNG, JPEG, JPG, or WEBP format" });
+        }
+    }
+
+    const uploadedImages = [];
+
+    for (const image of images) {
+        const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
+        if (!cloudinaryResponse || cloudinaryResponse.error) {
+            console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
+            return res.status(500).json({ error: "Failed to upload image" });
+        }
+        uploadedImages.push({
+            public_id: cloudinaryResponse.public_id,
+            url: cloudinaryResponse.secure_url
+        });
     }
 
     const post = await Pet.create({
-        name, age, category, description, breed, gender, userId, image: {
-            public_id: cloudinaryResponse.public_id,
-            url: cloudinaryResponse.secure_url
-        }
-    })
-    res.send({
+        name, age, category, description, breed, gender, createdBy, image: uploadedImages
+    });
+
+    res.status(200).json({
         success: true,
-        message: "posted about pets",
+        message: "Posted about pets",
         post
-    })
+    });
 })
 
 export const getpets = asyncErrorHandling(async (req, res) => {
@@ -133,8 +143,8 @@ export const deletePet = asyncErrorHandling(async (req, res) => {
 });
 
 export const updatePet = asyncErrorHandling(async (req, res) => {
-    const { role } = req.user
-    if (role == "Customer") return errorHanlder(createError("you don't have access to this feature"), req, res)
+    const { role } = req.user;
+    if (role === "Customer") return errorHanlder(createError("You don't have access to this feature"), req, res);
 
     const { id } = req.params;
 
@@ -143,47 +153,92 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
         return errorHanlder(createError("Could not find the pet"), req, res);
     }
 
-    if (req.files && req.files.image) {
-        const { image } = req.files;
+    const { images } = req.files;
 
-        const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    if (!images || !Array.isArray(images)) {
+        return errorHanlder(createError("Please provide two or more images"), req, res);
+    }
+
+    const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+
+    for (const image of images) {
         if (!allowedExtensions.includes(image.mimetype)) {
-            return errorHanlder(createError("Please upload the image in PNG, JPEG, JPG, or WEBP format"), req, res);
+            return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res);
         }
+    }
 
+    const uploadedImages = [];
+
+    for (const image of images) {
         const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
         if (!cloudinaryResponse || cloudinaryResponse.error) {
             console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
-            return errorHanlder(createError("Failed to upload"), req, res);
+            return errorHanlder(createError("Failed to upload images"), req, res);
         }
-
-        const updatedPet = await Pet.findByIdAndUpdate(id, {
-            ...req.body, image: {
-                public_id: cloudinaryResponse.public_id,
-                url: cloudinaryResponse.secure_url
-            }
-        }, {
-            returnOriginal: false,
-            runValidators: true,
-            useFindAndModify: false
-        });
-
-        res.status(200).send({
-            success: true,
-            message: "Pet data updated successfully with new image",
-            updatedPet
-        });
-    } else {
-        const updatedPet = await Pet.findByIdAndUpdate(id, req.body, {
-            returnOriginal: false,
-            runValidators: true,
-            useFindAndModify: false
-        });
-
-        res.status(200).send({
-            success: true,
-            message: "Pet data updated successfully without changing the image",
-            updatedPet
+        uploadedImages.push({
+            public_id: cloudinaryResponse.public_id,
+            url: cloudinaryResponse.secure_url
         });
     }
+
+    const updatedPet = await Pet.findByIdAndUpdate(id, {
+        ...req.body,
+        image: uploadedImages
+    }, {
+        returnOriginal: false,
+        runValidators: true,
+        useFindAndModify: false
+    });
+
+    res.status(200).send({
+        success: true,
+        message: "Pet data updated successfully with new images",
+        updatedPet
+    });
 });
+
+
+export const addToFav = asyncErrorHandling(async (req, res) => {
+    const { role, id: userId } = req.user;
+    if (role === "Admin") {
+        return errorHanlder(createError("You don't have access to this feature"), req, res);
+    }
+
+    const { id } = req.params;
+    if (!id) {
+        return errorHanlder(createError("Pet not found"), req, res);
+    }
+
+    const result = await user.findOneAndUpdate(
+        { _id: userId, 'favorites': { $ne: id } },
+        { $push: { favorites: id } },
+        { new: true }
+    );
+
+    if (!result) {
+        return errorHanlder(createError("Pet already in favorites"), req, res);
+    }
+
+    res.send({
+        success: true,
+        message: "Pet added to favorites successfully!",
+    });
+});
+
+export const veiwFavPet = asyncErrorHandling(async (req, res) => {
+    const { role, id: userId } = req.user
+
+    if (role == "Admin") return errorHanlder(createError("you don't have access to this feature"), req, res)
+
+    const favUser = await user.findById(userId).populate('favorites')
+
+    if (!favUser) return errorHanlder(createError("User not found"), req, res)
+
+    const fav = favUser.favorites
+
+    res.send({
+        success: true,
+        favorites: fav,
+    });
+})
+
