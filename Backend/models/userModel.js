@@ -46,7 +46,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["Admin", "Customer"]
     },
-    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'PetsData' }]
 });
 
 userSchema.pre("save", async function (next) {

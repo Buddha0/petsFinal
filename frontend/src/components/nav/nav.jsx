@@ -69,7 +69,7 @@ export default function Nav() {
                     onClick={() => setShowDropDown(!showDropDown)}
                   >
                     {" "}
-                    Welcome, {loggedInUser.firstName}{" "}
+                    Welcome, {loggedInUser.firstname}{" "}
                   </p>
 
                   {showDropDown && (

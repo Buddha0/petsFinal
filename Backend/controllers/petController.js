@@ -205,7 +205,6 @@ export const addFav = asyncErrorHandling(async (req, res) => {
         return res.status(400).json({ success: false, message: 'Pet already exists in favorites' });
     }
 
-    // Add the pet to the user's favorites list
     const favorite = new Favorite({ user: userId, pet: petId });
     await favorite.save();
 
@@ -223,7 +222,6 @@ export const getFav = asyncErrorHandling(async (req, res) => {
         return errorHanlder(createError("User not found"), req, res);
     }
 
-    // Query the Favorite collection to get the favorite pets of the user
     const favorites = await Favorite.find({ user: userId }).populate('pet');
 
     return res.status(200).json({ success: true, favorites });
@@ -247,6 +245,4 @@ export const deleteFav = asyncErrorHandling(async (req, res) => {
     await Favorite.deleteOne(favoriteToDelete);
 
     return res.status(200).json({ success: true, message: 'Pet removed from favorites successfully' });
-
-
 })

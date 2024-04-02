@@ -5,13 +5,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("Customer");
+
   const navigate = useNavigate();
 
   const firstNameRef = useRef();
@@ -24,8 +25,8 @@ export default function Register() {
     e.preventDefault();
 
     const formData = {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       number,
       email,
       password,
@@ -45,14 +46,6 @@ export default function Register() {
         alert("Something went wrong");
         console.error("Error:", error);
       });
-
-    setFirstName("");
-    setLastName("");
-    setNumber("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setRole("Customer");
   }
 
   return (
@@ -73,7 +66,7 @@ export default function Register() {
                 placeholder=""
                 required
                 onChange={(e) => setFirstName(e.target.value)}
-                value={firstName}
+                value={firstname}
               />
               <span>First name</span>
             </label>
@@ -84,7 +77,7 @@ export default function Register() {
                 placeholder=""
                 required
                 onChange={(e) => setLastName(e.target.value)}
-                value={lastName}
+                value={lastname}
               />
               <span>Last name</span>
             </label>
@@ -142,8 +135,8 @@ export default function Register() {
             <span>Role:</span>
             <select
               className={styles.select}
-              value={role}
               onChange={(e) => setRole(e.target.value)}
+              value={role}
             >
               <option value="Customer">Customer</option>
               <option value="Admin">Admin</option>
