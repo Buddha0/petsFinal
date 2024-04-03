@@ -6,6 +6,7 @@ import { user } from "../models/userModel.js"
 import { Favorite } from "../models/favModel.js"
 
 export const postPets = asyncErrorHandling(async (req, res, next) => {
+
     const { role } = req.user;
     if (role === "Customer") {
         return res.status(403).json({ error: "You don't have access to this feature" });
@@ -18,7 +19,11 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         return res.status(400).json({ error: "Please provide all required fields" });
     }
 
+
+
     const { images } = req.files;
+    console.log(images)
+
     if (!images || !Array.isArray(images)) {
         return res.status(400).json({ error: "Please provide two or more images" });
     }
@@ -191,9 +196,12 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
 });
 
 export const addFav = asyncErrorHandling(async (req, res) => {
-    const { id: userId } = req.user
+    const { id : userId} = req.body
+
+    console.log("asdasd", userId)
 
     if (!userId) return errorHanlder(createError("not user found"), req, res)
+ 
 
     const { id: petId } = req.params;
 

@@ -7,11 +7,16 @@ import Register from "./pages/register/register";
 import Home from "./pages/home/home";
 import AllPets from "./pages/allPets/allPets";
 import PetsDescription from "./pages/petsDescription/petsDescription";
+import CreatePets from "./pages/createPets/createPets";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/create",
+    element: <CreatePets  />,
   },
   {
     path: "/login",

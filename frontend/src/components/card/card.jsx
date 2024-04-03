@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styles from "./card.module.css";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { Link } from "react-router-dom";
 
@@ -9,7 +8,7 @@ export default function Card({ pet }) {
 
   useEffect(() => {
     const image = new Image();
-    image.src = pet.image.url;
+    image.src = pet.image[0].url;
     image.onload = () => {
       setImg(image);
     };

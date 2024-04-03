@@ -16,7 +16,6 @@ export default function AllPets() {
       .then(function (response) {
         setPets(response.data.getallpets);
         setFilteredPets(response.data.getallpets);
-        setLoadedImages(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -62,7 +61,7 @@ export default function AllPets() {
 
           <div className={styles.cards}>
             {filteredPets.map((pets) => {
-              return <Card pet={pets} key={pets.id} />;
+              return <Card pet={pets} key={pets._id} />;
             })}
           </div>
         </div>

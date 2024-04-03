@@ -5,20 +5,60 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 export default function PetsDescription() {
-  const [pets, setPets] = useState([]);
-  const [pet, setPet] = useState([]);
-  const { id } = useParams();
-  const [img, setImg] = useState(null);
+  const [pets, setPets] = useState(null);
+  const [pet, setPet] = useState(null)
+  const { id } = useParams()
+  const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [jwtToken, setJwtToken] = useState("");
+
+
 
   useEffect(() => {
-    const image = new Image();
-    image.src = pet?.image?.url;
-    image.onload = () => {
-      setImg(image);
-    };
-  }, [id, pet]);
+    // Fetch user object from local storage
+    const userString = localStorage.getItem("user");
+    const user = JSON.parse(userString);
+    // Extract _id from user object
+    if (user && user._id) {
+      setUserId(user._id);
+    }
+
+    // Fetch jwtToken from local storage
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      setJwtToken(token);
+    }
+  }, []);
+
+  const navigate = useNavigate();
+
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleAddToFavorites= async () => {
+    try {
+    
+      const response = await axios.post(`http://localhost:3000/petFinder/addFav/${id}`, 
+      { id: userId ,
+        token:jwtToken,
+      
+      }
+      
+      );
+  
+      console.log(response.data); 
+  
+  
+    } catch (error) {
+      console.error('Error:', error);
+  
+    }
+  };
+
+
 
   useEffect(() => {
     axios
@@ -29,9 +69,13 @@ export default function PetsDescription() {
       .catch(function (error) {
         console.log(error);
       });
-  }, [id]);
+  }, [id])
+
+
 
   useEffect(() => {
+
+
     axios
       .get("http://localhost:3000/petFinder/get")
       .then(function (response) {
@@ -40,30 +84,54 @@ export default function PetsDescription() {
       .catch(function (error) {
         console.log(error);
       });
+
   }, []);
 
-  console.log(pet);
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === pet?.image?.length - 1 ? 0 : prevIndex + 1));
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? pet?.image?.length - 1 : prevIndex - 1));
+  };
+
+
 
   return (
     <>
       <Nav />
 
+
       <div className={styles.img_container}>
-        {img === null ? (
-          <>
-            <div className={styles.skeletonLoading_big}></div>
-            <div className={styles.skeletonLoading_small}></div>
-          </>
-        ) : (
-          <>
-            <img src={pet?.image?.url} className={styles.img_blur}></img>
-            <img src={pet?.image?.url} className={styles.img}></img>
-            <Link to="/allPets" className={styles.link}>
-              <IoIosArrowRoundBack className={styles.backArrow} />
-            </Link>
-          </>
-        )}
+        <IoIosArrowRoundBack className={styles.backArrow} onClick={() => navigate("/allPets")} />
+        {
+          pet === null ?
+            <>
+              <img className={styles.skeletonLoading_big} />
+              <img className={styles.skeletonLoading_small} />
+            </>
+            :
+            <>
+              {pet.image && pet.image[currentImageIndex] && (
+                <>
+
+                  <img src={pet.image[currentImageIndex].url} className={styles.img_blur} alt={`Blurry Image`} />
+                  <img src={pet.image[currentImageIndex].url} className={styles.img} alt={`Image `} />
+                </>
+              )}
+            </>
+        }
+
+
+
+
+
+
+
       </div>
+
+      <button onClick={prevImage}>Previous</button>
+      <button onClick={nextImage}>Next</button>
 
       <div className={styles.container}>
         <div className={styles.description_container}>
@@ -73,11 +141,17 @@ export default function PetsDescription() {
             <button className={`${styles.button} ${styles.button1}`}>
               <p>Adopt Pet</p>
             </button>
-            <Link to="/allPets">
-              <button className={`${styles.button} ${styles.button2}`}>
+
+            {isAddedToFavorites ? (
+              <button className={`${styles.button} ${styles.button2}`} onClick={handleAddToFavorites}>
+                <p>Added to Favorites</p>
+              </button>
+            ) : (
+              <button className={`${styles.button} ${styles.button2}`} onClick={handleAddToFavorites}>
                 <p>Add To Favourites</p>
               </button>
-            </Link>
+            )}
+
           </div>
           <p className={styles.paragraph}>{pet?.description}</p>
         </div>
@@ -85,15 +159,14 @@ export default function PetsDescription() {
         <div className={styles.morePets}>
           <h1>More Pets You Might Like</h1>
           <div className={styles.cards}>
-            {pets
-              .slice(0, 4)
-              .filter((data) => data._id !== id)
-              .map((pets) => {
-                return <Card pet={pets} key={pets.id} />;
-              })}
+            {pets?.slice(0, 4).filter((data) => data._id !== id).map((pets) => {
+              return <Card pet={pets} key={pets.id} />;
+            })}
           </div>
         </div>
+
       </div>
+
     </>
-  );
+  )
 }
