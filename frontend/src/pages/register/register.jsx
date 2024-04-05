@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-import Nav from "../../components/nav/nav"
-import styles from './register.module.css'; // Adjust the path as necessary
+import React, { useState } from "react";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Nav from "../../components/nav/nav";
+import styles from "./register.module.css";
 
 function Register() {
   const [firstname, setFirstName] = useState("");
@@ -33,21 +33,21 @@ function Register() {
     };
 
     axios
-    .post("http://localhost:3000/petfinder/user/register", formData)
-    .then((response) => {
-      const token = response?.data?.jwtToken;
-      const user = response?.data?.user;
+      .post("http://localhost:3000/petfinder/user/register", formData)
+      .then((response) => {
+        const token = response?.data?.jwtToken;
+        const user = response?.data?.user;
 
-      // Set cookie with appropriate attributes
-      setCookie("token", token, {
-        path: "/", // Set path to root to make it valid for all paths
-        sameSite: "None", // Set SameSite attribute to None for cross-origin requests
-        secure: true, // Ensure that cookie is only sent over HTTPS
-      });
+        // Set cookie with appropriate attributes
+        setCookie("token", token, {
+          path: "/", // Set path to root to make it valid for all paths
+          sameSite: "None", // Set SameSite attribute to None for cross-origin requests
+          secure: true, // Ensure that cookie is only sent over HTTPS
+        });
 
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/");
-    })
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/");
+      })
       .catch((error) => {
         toast(error?.response?.data?.message, {
           type: "error",
@@ -60,7 +60,7 @@ function Register() {
       <Nav />
       <div className={styles.formSection}>
         <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
-        <ToastContainer  bodyClassName="toastBody" />
+          <ToastContainer bodyClassName="toastBody" />
           <img
             src="https://sushirainbow.files.wordpress.com/2020/11/wp-1605470582609.gif"
             className={styles.gif}
@@ -127,15 +127,16 @@ function Register() {
                 required
               />
             </div>
-            <div className={styles.inputDiv}>
-              <input
-                type="text"
-                placeholder="Role"
+            <div className={styles.selectDiv}>
+              <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                autoComplete="off"
                 required
-              />
+              >
+                <option value="">Select Role</option>
+                <option value="Customer">Customer</option>
+                <option value="Admin">Admin</option>
+              </select>
             </div>
           </div>
 
@@ -149,7 +150,7 @@ function Register() {
             </button>
           </div>
           <p className={styles.signInMessage}>
-            Already Have An Account ? Sign In
+            Already Have An Account ? <Link to="/login">Sign In</Link>
           </p>
         </form>
       </div>

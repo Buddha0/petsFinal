@@ -16,12 +16,12 @@
 }
 
 .formSection {
-display: flex;
-justify-content: center;
-align-items: center;
-width:100%;
-min-height: 100vh;
-padding:2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
 }
 
 .gif {
@@ -32,6 +32,7 @@ padding:2rem;
   border-top-right-radius: 12px;
   object-position: top;
 }
+
 .fa-xmark {
   position: absolute;
   font-size: 2rem;
@@ -47,6 +48,7 @@ padding:2rem;
   color: black;
   background-color: white;
 }
+
 form {
   position: relative;
   border-radius: 12px;
@@ -70,6 +72,16 @@ form p {
   margin: 2rem 0rem;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 input,
 textarea {
   border-top: none;
@@ -88,6 +100,7 @@ textarea {
 .formPadding {
   padding: 1rem;
 }
+
 .btnDiv {
   display: flex;
   justify-content: center;
@@ -105,15 +118,37 @@ textarea {
   color: white;
 }
 
-.message{
-    font-size: 1.5rem;
+.message {
+  font-size: 1.5rem;
 }
 
-.signInMessage{
-    font-size: 1.4rem;
-    cursor: pointer;
+.signInMessage {
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
-.signInMessage:hover{
-    color:rgb(54, 54, 54)
+.signInMessage:hover {
+  color: rgb(54, 54, 54)
+}
+
+.selectDiv {
+  width: 100%;
+  margin: 2rem 0;
+}
+
+select {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  border-bottom: 1px solid rgb(209, 204, 204);
+  width: 100%;
+  padding: 0.7rem 2rem;
+  background-color: transparent;
+  color: rgb(117 117 117);
+}
+
+select option {
+  background-color: #1a1a1a;
+  color: white;
 }

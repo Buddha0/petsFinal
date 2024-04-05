@@ -21,7 +21,7 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
 
 
     const { images } = req.files;
-    
+
 
     if (!images || !Array.isArray(images)) {
         return res.status(400).json({ error: "Please provide two or more images" });
@@ -140,6 +140,8 @@ export const deletePet = asyncErrorHandling(async (req, res) => {
 
     await Pet.deleteOne({ _id: id });
 
+    await Favorite.deleteMany({ pet: id });
+
     res.status(200).json({
         success: true,
         message: "Pet deleted successfully"
@@ -222,9 +224,9 @@ export const addFav = asyncErrorHandling(async (req, res) => {
 })
 
 export const getFav = asyncErrorHandling(async (req, res) => {
-    const { id: userId } = req.user
+    const { id: userId, role } = req.user
 
-
+    if (role != "Customer") return errorHanlder(createError("you are not authorized"), req, res)
 
     if (!userId) return errorHanlder(createError("no user found"), req, res)
 

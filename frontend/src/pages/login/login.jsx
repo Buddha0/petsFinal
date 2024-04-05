@@ -3,19 +3,18 @@ import { Link } from "react-router-dom";
 import styles from "./login.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-  import { useCookies } from 'react-cookie';
-  import Nav from "../../components/nav/nav";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useCookies } from "react-cookie";
+import Nav from "../../components/nav/nav";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Customer");
-  const [__, setCookie] = useCookies(['token']);
+  const [__, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 
-  
   function formSubmit(e) {
     e.preventDefault();
 
@@ -24,7 +23,6 @@ export default function Register() {
       password,
       role,
     };
-   
 
     axios
       .post("http://localhost:3000/petFinder/user/login", postData)
@@ -40,9 +38,9 @@ export default function Register() {
         navigate("/");
       })
       .catch((error) => {
-        toast(error?.response?.data?.message,{
-          type:"error"
-        })
+        toast(error?.response?.data?.message, {
+          type: "error",
+        });
       });
 
     setEmail("");
@@ -52,9 +50,9 @@ export default function Register() {
 
   return (
     <>
-    <Nav/>
-          <ToastContainer  bodyClassName="toastBody" />
-          <div className={styles.formSection}>
+      <Nav />
+      <ToastContainer bodyClassName="toastBody" />
+      <div className={styles.formSection}>
         <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
           <img
             src="https://sushirainbow.files.wordpress.com/2020/11/wp-1605470582609.gif"
@@ -62,9 +60,6 @@ export default function Register() {
           />
           <p className={styles.message}>Hey there! Want to Login?</p>
           <div className={styles.formPadding}>
-            
-         
-          
             <div className={styles.inputDiv}>
               <input
                 type="email"
@@ -85,16 +80,17 @@ export default function Register() {
                 required
               />
             </div>
-        
-            <div className={styles.inputDiv}>
-              <input
-                type="text"
-                placeholder="Role"
+
+            <div className={styles.selectDiv}>
+              <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                autoComplete="off"
                 required
-              />
+              >
+                <option value="">Select Role</option>
+                <option value="Customer">Customer</option>
+                <option value="Admin">Admin</option>
+              </select>
             </div>
           </div>
 
@@ -108,11 +104,10 @@ export default function Register() {
             </button>
           </div>
           <p className={styles.signInMessage}>
-            Don't Have An Account ? Register
+            Don't Have An Account ? <Link to="/register">Sign up now!</Link>
           </p>
         </form>
       </div>
     </>
-   
   );
 }
