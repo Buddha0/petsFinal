@@ -17,7 +17,7 @@ export default function Nav() {
       setLoggedInUser(userFromLocalStorage);
     }
   }, [cookies.token]);
-  
+
   function handleLogOutClick() {
     localStorage.clear();
     setShowDropDown(false);
@@ -49,6 +49,13 @@ export default function Nav() {
               <Link to="/allPets" className={styles.text}>
                 Available Pets
               </Link>
+           
+            </li>
+            <li className={styles.list}>
+              <Link to="/favourites" className={styles.text}>
+                Favourite
+              </Link>
+           
             </li>
 
             {!cookies.token && (

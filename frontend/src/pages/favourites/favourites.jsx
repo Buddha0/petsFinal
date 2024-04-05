@@ -53,6 +53,7 @@ export default function Favourites() {
 
     return (
         <>
+        
             <Nav />
       
             <div className={styles.mainContainer}>
