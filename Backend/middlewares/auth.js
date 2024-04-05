@@ -4,7 +4,9 @@ import jwt from "jsonwebtoken";
 import { user } from "../models/userModel.js"
 
 export const isAuthorized = asyncErrorHandling(async (req, res, next) => {
-    const { token } = req.body;
+    const  token  = req.headers.authorization;
+
+    console.log("this is token" , token)
 
 
     if (!token) {

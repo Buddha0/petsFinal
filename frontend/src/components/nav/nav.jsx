@@ -1,23 +1,28 @@
 import { useEffect, useState } from "react";
 import styles from "./nav.module.css";
 import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 
 export default function Nav() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showDropDown, setShowDropDown] = useState(false);
+  const [cookies, setCookie,removeCookie] = useCookies(['token']);
 
   useEffect(() => {
     const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-    // console.log("User from localStorage:", userFromLocalStorage.firstName);
-    if (userFromLocalStorage) {
+    const tokenFromCookies = cookies.token;
+  
+    if (userFromLocalStorage && tokenFromCookies) {
       setLoggedInUser(userFromLocalStorage);
     }
-  }, []);
-
+  }, [cookies.token]);
+  
   function handleLogOutClick() {
     localStorage.clear();
     setShowDropDown(false);
     setLoggedInUser(null);
+    removeCookie('token');
   }
 
   function handleSettingClick() {
@@ -46,7 +51,7 @@ export default function Nav() {
               </Link>
             </li>
 
-            {!loggedInUser && (
+            {!cookies.token && (
               <>
                 <li className={styles.list}>
                   <Link to="/register" className={styles.text}>
@@ -62,14 +67,14 @@ export default function Nav() {
             )}
 
             <li className={styles.list}>
-              {loggedInUser && (
+              {(loggedInUser && cookies?.token) && (
                 <div className={styles.dropDown_container}>
                   <p
                     className={styles.text}
                     onClick={() => setShowDropDown(!showDropDown)}
                   >
                     {" "}
-                    Welcome, {loggedInUser.firstname}{" "}
+                    Welcome, {loggedInUser?.firstname}{" "}
                   </p>
 
                   {showDropDown && (

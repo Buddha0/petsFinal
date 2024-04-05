@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import styles from "./register.module.css";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+import Nav from "../../components/nav/nav"
+import styles from './register.module.css'; // Adjust the path as necessary
 
-export default function Register() {
+function Register() {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [number, setNumber] = useState("");
@@ -12,14 +15,9 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("Customer");
+  const [__, setCookie] = useCookies(["token"]);
 
   const navigate = useNavigate();
-
-  const firstNameRef = useRef();
-
-  useEffect(() => {
-    firstNameRef.current.focus();
-  }, []);
 
   function formSubmit(e) {
     e.preventDefault();
@@ -33,125 +31,130 @@ export default function Register() {
       confirmPassword,
       role,
     };
-    console.log(formData);
+
     axios
-      .post("http://localhost:3000/petfinder/user/register", formData)
-      .then((response) => {
-        console.log("Response:", response.data);
-        localStorage.setItem("jwtToken", response?.data?.jwtToken);
-        localStorage.setItem("user", JSON.stringify(response?.data?.user));
-        navigate("/");
-      })
+    .post("http://localhost:3000/petfinder/user/register", formData)
+    .then((response) => {
+      const token = response?.data?.jwtToken;
+      const user = response?.data?.user;
+
+      // Set cookie with appropriate attributes
+      setCookie("token", token, {
+        path: "/", // Set path to root to make it valid for all paths
+        sameSite: "None", // Set SameSite attribute to None for cross-origin requests
+        secure: true, // Ensure that cookie is only sent over HTTPS
+      });
+
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/");
+    })
       .catch((error) => {
-        alert("Something went wrong");
-        console.error("Error:", error);
+        toast(error?.response?.data?.message, {
+          type: "error",
+        });
       });
   }
 
   return (
     <>
-      <div className={styles.form_container}>
-        <form className={styles.form} onSubmit={formSubmit}>
-          <p className={styles.title}>Sign Up</p>
-          <p className={styles.message}>
-            Signup now and get full access to our app.
-          </p>
-
-          <div className={styles.name}>
-            <label>
+      <Nav />
+      <div className={styles.formSection}>
+        <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
+        <ToastContainer  bodyClassName="toastBody" />
+          <img
+            src="https://sushirainbow.files.wordpress.com/2020/11/wp-1605470582609.gif"
+            className={styles.gif}
+          />
+          <p className={styles.message}>Hey there! Want to Register?</p>
+          <div className={styles.formPadding}>
+            <div className={styles.inputDiv}>
               <input
-                ref={firstNameRef}
-                className={styles.input}
                 type="text"
-                placeholder=""
-                required
-                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Your First Name"
                 value={firstname}
-              />
-              <span>First name</span>
-            </label>
-            <label>
-              <input
-                className={styles.input}
-                type="text"
-                placeholder=""
+                onChange={(e) => setFirstName(e.target.value)}
+                autoComplete="off"
                 required
-                onChange={(e) => setLastName(e.target.value)}
-                value={lastname}
               />
-              <span>Last name</span>
-            </label>
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="text"
+                placeholder="Your Last Name"
+                value={lastname}
+                onChange={(e) => setLastName(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="number"
+                placeholder="Your Phone Number"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="email"
+                placeholder="Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="password"
+                placeholder="Your Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="text"
+                placeholder="Role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
           </div>
 
-          <label>
-            <input
-              className={styles.input}
-              type="number"
-              placeholder=""
-              required
-              onChange={(e) => setNumber(e.target.value)}
-              value={number}
-            />
-            <span>Number</span>
-          </label>
-
-          <label>
-            <input
-              className={styles.input}
-              type="email"
-              placeholder=""
-              required
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-            />
-            <span>Email</span>
-          </label>
-
-          <label>
-            <input
-              className={styles.input}
-              type="password"
-              placeholder=""
-              required
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
-            <span>Password</span>
-          </label>
-
-          <label>
-            <input
-              className={styles.input}
-              type="password"
-              placeholder=""
-              required
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}
-            />
-            <span>Confirm password</span>
-          </label>
-
-          <label>
-            <span>Role:</span>
-            <select
-              className={styles.select}
-              onChange={(e) => setRole(e.target.value)}
-              value={role}
+          <div className={styles.btnDiv}>
+            <button
+              className={`${styles.btn} ${styles.btnSend}`}
+              type="submit"
+              id="submit_btn"
             >
-              <option value="Customer">Customer</option>
-              <option value="Admin">Admin</option>
-            </select>
-          </label>
-
-          <button className={styles.submit} type="submit">
-            Register
-          </button>
-
-          <p className={styles.signin}>
-            Already have an account? <Link to="/login">Signin</Link>
+              Register
+            </button>
+          </div>
+          <p className={styles.signInMessage}>
+            Already Have An Account ? Sign In
           </p>
         </form>
       </div>
     </>
   );
 }
+
+export default Register;

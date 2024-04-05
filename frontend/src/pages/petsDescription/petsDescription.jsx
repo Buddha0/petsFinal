@@ -6,56 +6,75 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PetsDescription() {
   const [pets, setPets] = useState(null);
   const [pet, setPet] = useState(null)
   const { id } = useParams()
-  const [isAddedToFavorites, setIsAddedToFavorites] = useState(false);
-  const [userId, setUserId] = useState("");
-  const [jwtToken, setJwtToken] = useState("");
+  const [cookies, __] = useCookies(['token']);
+  const [isFavorite, setIsFavorite] = useState(false);
 
+
+  const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
 
   useEffect(() => {
-    // Fetch user object from local storage
-    const userString = localStorage.getItem("user");
-    const user = JSON.parse(userString);
-    // Extract _id from user object
-    if (user && user._id) {
-      setUserId(user._id);
-    }
-
-    // Fetch jwtToken from local storage
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
-      setJwtToken(token);
-    }
-  }, []);
-
-  const navigate = useNavigate();
-
-
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const handleAddToFavorites= async () => {
-    try {
     
-      const response = await axios.post(`http://localhost:3000/petFinder/addFav/${id}`, 
-      { id: userId ,
-        token:jwtToken,
-      
-      }
-      
-      );
-  
-      console.log(response.data); 
-  
-  
-    } catch (error) {
-      console.error('Error:', error);
-  
+    async function findIfAlreadyInFavourites() {
+    await axios.get(
+        `http://localhost:3000/petFinder/getfav`,
+
+        {
+
+          headers: {
+            authorization: cookies.token
+          },
+        }
+      )
+        .then(response => {
+          const favorites = response.data.favorites;
+          const isPetInFavorites = favorites.some(favorite => favorite.pet._id === id);
+          setIsFavorite(isPetInFavorites);
+        })
+        .catch(error => console.error('Error fetching favorites:', error));
     }
+    findIfAlreadyInFavourites() 
+
+  }, [id]);
+
+
+  const handleAddToFavorites = async () => {
+
+    try {
+
+      const response = await axios.post(
+        `http://localhost:3000/petFinder/addfav/${id}`,
+        null,
+        {
+
+          headers: {
+            authorization: cookies.token
+          },
+        }
+      );
+
+      toast(response?.data?.message, {
+        type: "success",
+      });
+
+      setIsFavorite(true);
+      return response.data;
+    } catch (error) {
+      setIsFavorite(false);
+      toast(error?.response?.data?.message, {
+        type: "error",
+      });
+    }
+
   };
 
 
@@ -74,8 +93,6 @@ export default function PetsDescription() {
 
 
   useEffect(() => {
-
-
     axios
       .get("http://localhost:3000/petFinder/get")
       .then(function (response) {
@@ -96,12 +113,11 @@ export default function PetsDescription() {
   };
 
 
-
   return (
     <>
       <Nav />
 
-
+      <ToastContainer />
       <div className={styles.img_container}>
         <IoIosArrowRoundBack className={styles.backArrow} onClick={() => navigate("/allPets")} />
         {
@@ -123,11 +139,6 @@ export default function PetsDescription() {
         }
 
 
-
-
-
-
-
       </div>
 
       <button onClick={prevImage}>Previous</button>
@@ -142,15 +153,11 @@ export default function PetsDescription() {
               <p>Adopt Pet</p>
             </button>
 
-            {isAddedToFavorites ? (
+       
               <button className={`${styles.button} ${styles.button2}`} onClick={handleAddToFavorites}>
-                <p>Added to Favorites</p>
+                {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
               </button>
-            ) : (
-              <button className={`${styles.button} ${styles.button2}`} onClick={handleAddToFavorites}>
-                <p>Add To Favourites</p>
-              </button>
-            )}
+            
 
           </div>
           <p className={styles.paragraph}>{pet?.description}</p>

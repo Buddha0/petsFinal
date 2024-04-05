@@ -20,9 +20,8 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
     }
 
 
-
     const { images } = req.files;
-    console.log(images)
+    
 
     if (!images || !Array.isArray(images)) {
         return res.status(400).json({ error: "Please provide two or more images" });
@@ -196,12 +195,13 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
 });
 
 export const addFav = asyncErrorHandling(async (req, res) => {
-    const { id : userId} = req.body
+    const { id: userId, role } = req.user
 
-    console.log("asdasd", userId)
+    // console.log("asdasd", userId)
+    if (role !== "Customer") return errorHanlder(createError("You're not authorizeddd"), req, res)
 
     if (!userId) return errorHanlder(createError("not user found"), req, res)
- 
+
 
     const { id: petId } = req.params;
 
@@ -210,7 +210,8 @@ export const addFav = asyncErrorHandling(async (req, res) => {
     const existingFavorite = await Favorite.findOne({ user: userId, pet: petId });
 
     if (existingFavorite) {
-        return res.status(400).json({ success: false, message: 'Pet already exists in favorites' });
+        await Favorite.deleteOne(existingFavorite);
+        return res.status(400).json({ success: false, message: 'Pet removed from favourites' });
     }
 
     const favorite = new Favorite({ user: userId, pet: petId });
@@ -222,6 +223,8 @@ export const addFav = asyncErrorHandling(async (req, res) => {
 
 export const getFav = asyncErrorHandling(async (req, res) => {
     const { id: userId } = req.user
+
+
 
     if (!userId) return errorHanlder(createError("no user found"), req, res)
 

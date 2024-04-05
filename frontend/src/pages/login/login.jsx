@@ -3,21 +3,19 @@ import { Link } from "react-router-dom";
 import styles from "./login.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+  import { useCookies } from 'react-cookie';
+  import Nav from "../../components/nav/nav";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Customer");
-  const [message, setMessage] = useState("");
-
+  const [__, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
-  const emailRef = useRef();
-
-  useEffect(() => {
-    emailRef.current.focus();
-  }, []);
-
+  
   function formSubmit(e) {
     e.preventDefault();
 
@@ -26,20 +24,25 @@ export default function Register() {
       password,
       role,
     };
-    console.log(postData);
+   
 
     axios
       .post("http://localhost:3000/petFinder/user/login", postData)
       .then((response) => {
-        console.log("Response:", response.data);
-        setMessage("Login success");
-        localStorage.setItem("jwtToken", response?.data?.jwtToken);
-        localStorage.setItem("user", JSON.stringify(response?.data?.user));
+        const token = response?.data?.jwtToken;
+        const user = response?.data?.user;
+        setCookie("token", token, {
+          path: "/", // Set path to root to make it valid for all paths
+          sameSite: "None", // Set SameSite attribute to None for cross-origin requests
+          secure: true, // Ensure that cookie is only sent over HTTPS
+        });
+        localStorage.setItem("user", JSON.stringify(user));
         navigate("/");
       })
       .catch((error) => {
-        setMessage("Something went wrong");
-        console.error("Error:", error);
+        toast(error?.response?.data?.message,{
+          type:"error"
+        })
       });
 
     setEmail("");
@@ -48,56 +51,68 @@ export default function Register() {
   }
 
   return (
-    <form className={styles.form} onSubmit={formSubmit}>
-      <p className={styles.title}>Login</p>
-      <p className={styles.message}>Welcome back!</p>
+    <>
+    <Nav/>
+          <ToastContainer  bodyClassName="toastBody" />
+          <div className={styles.formSection}>
+        <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
+          <img
+            src="https://sushirainbow.files.wordpress.com/2020/11/wp-1605470582609.gif"
+            className={styles.gif}
+          />
+          <p className={styles.message}>Hey there! Want to Login?</p>
+          <div className={styles.formPadding}>
+            
+         
+          
+            <div className={styles.inputDiv}>
+              <input
+                type="email"
+                placeholder="Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+            <div className={styles.inputDiv}>
+              <input
+                type="password"
+                placeholder="Your Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+        
+            <div className={styles.inputDiv}>
+              <input
+                type="text"
+                placeholder="Role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+          </div>
 
-      <label>
-        <input
-          className={styles.input}
-          type="email"
-          ref={emailRef}
-          placeholder=""
-          required
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-        />
-        <span>Email</span>
-      </label>
-
-      <label>
-        <input
-          className={styles.input}
-          type="password"
-          placeholder=""
-          required
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-        />
-        <span>Password</span>
-      </label>
-
-      <label>
-        <span>Role:</span>
-        <select
-          className={styles.select}
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option value="Customer">Customer</option>
-          <option value="Admin">Admin</option>
-        </select>
-      </label>
-
-      <button className={styles.submit} type="submit">
-        Login
-      </button>
-
-      <p className={styles.signin}>
-        Don't have an account? <Link to="/Register">Register</Link>
-      </p>
-
-      {message && <p className={styles.message}>{message}</p>}
-    </form>
+          <div className={styles.btnDiv}>
+            <button
+              className={`${styles.btn} ${styles.btnSend}`}
+              type="submit"
+              id="submit_btn"
+            >
+              Login
+            </button>
+          </div>
+          <p className={styles.signInMessage}>
+            Don't Have An Account ? Register
+          </p>
+        </form>
+      </div>
+    </>
+   
   );
 }

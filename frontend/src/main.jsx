@@ -8,11 +8,16 @@ import Home from "./pages/home/home";
 import AllPets from "./pages/allPets/allPets";
 import PetsDescription from "./pages/petsDescription/petsDescription";
 import CreatePets from "./pages/createPets/createPets";
+import Favourites from "./pages/favourites/favourites";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/favourites",
+    element: <Favourites  />,
   },
   {
     path: "/create",

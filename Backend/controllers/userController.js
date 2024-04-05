@@ -23,7 +23,7 @@ export const register = asyncErrorHandling(async (req, res) => {
     const newUser = await user.create({
         firstname, lastname, number, email, password, confirmPassword, role
     })
-    console.log(newUser)
+   
     getToken(newUser, 200, res, "registration and token generation successfull")
 })
 
@@ -40,14 +40,14 @@ export const login = asyncErrorHandling(async (req, res) => {
     if (!confirmPass) {
         return errorHanlder(createError("email or password is incorrect"), req, res)
     }
-    console.log(req.user)
+
 
     getToken(userInfo, 200, res, "login and token generation successfull")
 })
 
 export const getLoggedInUser = asyncErrorHandling(async (req, res) => {
     const loggedInUser = await req.user
-    console.log(req.user)
+ 
     res.send({
         success: true,
         loggedInUser
