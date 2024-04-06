@@ -1,0 +1,84 @@
+.testominial_section {
+  width: 100%;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(248, 248, 248);
+}
+
+.testominial_container {
+  width: 100%;
+  max-width: 1200px;
+
+  font-family: "Raleway", sans-serif;
+  color: white;
+  position: relative;
+}
+
+.testominial_container  h1{
+ color:black;
+ margin-bottom: 3rem;
+}
+
+.testominial_container p {
+  font-size: 1.6rem;
+}
+
+.cards_container {
+  display: grid;
+grid-template-columns: repeat(2,1fr);
+  gap: 3rem;
+}
+.cards {
+  padding: 4rem 3rem;
+  color: rgb(0, 0, 0);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  margin: 0rem 1rem;
+  height: 100%;
+
+}
+.user_profile_info {
+  margin: 2rem 0rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: left;
+
+}
+.profileImg {
+width:45px;
+height: 45px;
+border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.testominial_container .font-small {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.testominial_container .font-smallest {
+  font-size: 1.2rem;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+@media (max-width: 1000px) {
+  .testominial_section {
+    padding-bottom: 0rem;
+  }
+
+  .testominial_container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 850px) {
+  .testominial_section {
+    padding-bottom: 0rem;
+  }
+}
