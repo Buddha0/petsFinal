@@ -27,10 +27,11 @@
 .gif {
   width: 100%;
   object-fit: cover;
+  object-position: center;
   height: 200px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  object-position: top;
+
 }
 
 .fa-xmark {

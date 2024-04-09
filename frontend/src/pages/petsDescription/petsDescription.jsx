@@ -119,7 +119,7 @@ export default function PetsDescription() {
 
       <ToastContainer />
       <div className={styles.img_container}>
-        <IoIosArrowRoundBack className={styles.backArrow} onClick={() => navigate("/allPets")} />
+        <IoIosArrowRoundBack className={styles.backArrow} onClick={() => navigate(-1)} />
         {
           pet === null ?
             <>

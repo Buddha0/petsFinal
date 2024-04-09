@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -61,10 +62,7 @@ function Register() {
       <div className={styles.formSection}>
         <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
           <ToastContainer bodyClassName="toastBody" />
-          <img
-            src="https://sushirainbow.files.wordpress.com/2020/11/wp-1605470582609.gif"
-            className={styles.gif}
-          />
+          <img src="../../../public/new.GIF" className={styles.gif} />
           <p className={styles.message}>Hey there! Want to Register?</p>
           <div className={styles.formPadding}>
             <div className={styles.inputDiv}>

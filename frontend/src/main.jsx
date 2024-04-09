@@ -9,6 +9,7 @@ import AllPets from "./pages/allPets/allPets";
 import PetsDescription from "./pages/petsDescription/petsDescription";
 import CreatePets from "./pages/createPets/createPets";
 import Favourites from "./pages/favourites/favourites";
+import DashboardHome from "./dashboard/dashboardPages/dashboardHome/dashboardHome";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/petDescription/:id",
     element: <PetsDescription/>,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardHome/>,
   },
 ]);
 
