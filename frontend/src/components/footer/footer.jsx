@@ -20,7 +20,7 @@ export default function Footer(){
             <div className={styles.footer_col_2}>
                 <h2>Link Title</h2>
                 <a href="#">Home</a>
-                <a href="#">Home</a>
+                <a href="#">Homeeeeee</a>
                 <a href="#">Home</a>
                 <a href="#">Home</a>
                 <a href="#">Home</a>
