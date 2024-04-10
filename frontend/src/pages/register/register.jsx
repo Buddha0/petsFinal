@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -39,7 +38,6 @@ function Register() {
         const token = response?.data?.jwtToken;
         const user = response?.data?.user;
 
-        // Set cookie with appropriate attributes
         setCookie("token", token, {
           path: "/", // Set path to root to make it valid for all paths
           sameSite: "None", // Set SameSite attribute to None for cross-origin requests
@@ -62,7 +60,7 @@ function Register() {
       <div className={styles.formSection}>
         <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
           <ToastContainer bodyClassName="toastBody" />
-          <img src="../../../public/new.GIF" className={styles.gif} />
+          <img src="/new.GIF" className={styles.gif} />
           <p className={styles.message}>Hey there! Want to Register?</p>
           <div className={styles.formPadding}>
             <div className={styles.inputDiv}>

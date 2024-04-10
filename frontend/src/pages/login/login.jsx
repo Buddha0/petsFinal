@@ -54,10 +54,7 @@ export default function Register() {
       <ToastContainer bodyClassName="toastBody" />
       <div className={styles.formSection}>
         <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
-          <img
-            src="https://sushirainbow.files.wordpress.com/2020/11/wp-1605470582609.gif"
-            className={styles.gif}
-          />
+          <img src="/new.GIF" className={styles.gif} />
           <p className={styles.message}>Hey there! Want to Login?</p>
           <div className={styles.formPadding}>
             <div className={styles.inputDiv}>

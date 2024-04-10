@@ -1,13 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-:root {
-  --primary-color: #00bfff;
-  --background-color: #1a1a1a;
-  --text-color: #fff;
-  --border-color: #333;
-  --secondary-color: royalblue;
-}
-
 * {
   padding: 0;
   margin: 0;
@@ -27,11 +19,9 @@
 .gif {
   width: 100%;
   object-fit: cover;
-  object-position: center;
   height: 200px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-
 }
 
 .fa-xmark {
@@ -54,12 +44,15 @@ form {
   position: relative;
   border-radius: 12px;
   font-family: "Raleway", sans-serif;
-  width: 450px;
+  max-width: 450px;
+  width: 100%;
   background-color: white;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 form p {
@@ -71,6 +64,7 @@ form p {
   width: 100%;
   background-color: rgb(5, 5, 5);
   margin: 2rem 0rem;
+  border-bottom: 1px solid rgb(209, 204, 204);
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -85,48 +79,46 @@ input[type="number"] {
 
 input,
 textarea {
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border: none;
   outline: none;
-  border-bottom: 1px solid rgb(209, 204, 204);
   width: 100%;
-  padding: 0.7rem 2rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgb(209, 204, 204);
 }
 
 textarea {
-  min-height: 15vh;
+  min-height: 10vh;
 }
 
 .formPadding {
   padding: 1rem;
-}
-
-.btnDiv {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 75%;
 }
 
 .btnSend {
+  text-align: center;
   margin: 2rem auto;
-  padding: 1rem 2rem;
+  padding: 1.5rem 5rem;
   outline: none;
   border: none;
   background-color: #141414;
-  width: 90%;
   cursor: pointer;
   color: white;
+  border-radius: 10px;
 }
 
 .message {
   font-size: 1.5rem;
 }
 
-.signInMessage {
+.signInMessage,
+.signInMessage a {
   font-size: 1.4rem;
   cursor: pointer;
+  color: black;
+  margin-bottom: 3rem;
 }
+
 
 .signInMessage:hover {
   color: rgb(54, 54, 54)
@@ -138,18 +130,22 @@ textarea {
 }
 
 select {
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border: none;
   outline: none;
-  border-bottom: 1px solid rgb(209, 204, 204);
   width: 100%;
-  padding: 0.7rem 2rem;
+  padding: 0.5rem 1rem;
   background-color: transparent;
   color: rgb(117 117 117);
+  border-bottom: 1px solid rgb(209, 204, 204);
 }
 
 select option {
   background-color: #1a1a1a;
   color: white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-bottom: 1px solid #007bff;
 }
