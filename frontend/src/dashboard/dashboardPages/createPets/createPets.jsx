@@ -7,6 +7,7 @@ import styles from "./createPets.module.css";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Nav from "../../../components/nav/nav";
 
 export default function CreatePets() {
     const [name, setName] = useState("");
@@ -16,10 +17,11 @@ export default function CreatePets() {
     const [breed, setBreed] = useState("");
     const [gender, setGender] = useState("");
     const [images, setImages] = useState([]);
-    const [cookies,__ ]= useCookies("token")
+    const [cookies, __] = useCookies("token")
+    const [isLoading, setIsLoading] = useState(false);
 
 
-   
+
     const handleImageUpload = (event) => {
         const files = Array.from(event.target.files);
         console.log("Selected Images:", files);
@@ -29,9 +31,9 @@ export default function CreatePets() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         const formData = new FormData();
-    
+
         // Append form fields
         formData.append('name', name);
         formData.append('category', category);
@@ -39,131 +41,139 @@ export default function CreatePets() {
         formData.append('description', description);
         formData.append('breed', breed);
         formData.append('gender', gender);
-   
-    
+
+
         // Append images
         images.forEach((image, index) => {
             formData.append(`images`, image);
         });
-    
-     
+
+
         try {
+            setIsLoading(true);
             const response = await axios.post('http://localhost:3000/petFinder/post', formData, {
-             
-            headers: {
-                // Set Authorization header with the token value
-                authorization : cookies.token
-              }
-            
+
+                headers: {
+                    // Set Authorization header with the token value
+                    authorization: cookies.token
+                }
+
             });
-    
-           if(response.data.success === true){
-            toast("New Pet created successfully", {
-                type:"success"
-            })
-           }
-  
+
+            if (response.data.success === true) {
+                toast("New Pet created successfully", {
+                    type: "success"
+                })
+                setIsLoading(false);
+            }
+
         } catch (error) {
             console.error('Error:', error);
+            setIsLoading(false);
         }
     };
-    
-    
+
+
     return (
         <>
-        <ToastContainer/>
-            <div className={styles.form_container}>
-                <form className={styles.form} onSubmit={handleSubmit}>
-                    <p className={styles.title}>Add Pets</p>
+            <Nav />
+            <ToastContainer bodyClassName="toastBody" />
+            <div className={styles.formSection}>
+                <form id="myForm" className={styles.myForm} onSubmit={handleSubmit}>
+                    <img src="/new.GIF" className={styles.gif} />
                     <p className={styles.message}>Add Pets</p>
+                    <div className={styles.formPadding}>
 
-                    {/* Input fields for pet details */}
-                    <label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            placeholder=""
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                        <span>Pet Name</span>
-                    </label>
+                        <div className={styles.inputDiv}>
+                            <input
+                                type="text"
+                                placeholder="Pet Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                autoComplete="off"
+                                required
+                            />
+                        </div>
 
-                    {/* Other input fields for pet details */}
+                        <div className={styles.inputDiv}>
+                            <input
+                                type="text"
+                                placeholder="Catgory"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                autoComplete="off"
+                                required
+                            />
+                        </div>
 
-                    <label>
-                        <input
-                            className={styles.input}
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            multiple
-                        />
-                        <span>Upload Images</span>
-                    </label>
+                        <div className={styles.inputDiv}>
+                            <input
+                                type="text"
+                                placeholder="Gender"
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                                autoComplete="off"
+                                required
+                            />
+                        </div>
 
-                    <label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            placeholder=""
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            required
-                        />
-                        <span>Gender</span>
-                    </label>
+                        <div className={styles.inputDiv}>
+                            <input
+                                type="text"
+                                placeholder="About pet"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                autoComplete="off"
+                                required
+                            />
+                        </div>
 
-                    <label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            placeholder=""
-                            value={breed}
-                            onChange={(e) => setBreed(e.target.value)}
-                            required
-                        />
-                        <span>Breed</span>
-                    </label>
+                        <div className={styles.inputDiv}>
+                            <input
+                                type="text"
+                                placeholder="Breed"
+                                value={breed}
+                                onChange={(e) => setBreed(e.target.value)}
+                                autoComplete="off"
+                                required
+                            />
+                        </div>
+
+                        <div className={styles.inputDiv}>
+                            <input
+                                type="number"
+                                placeholder="Pet Age"
+                                value={age}
+                                onChange={(e) => setAge(e.target.value)}
+                                autoComplete="off"
+                                required
+                            />
+                        </div>
+
+                        <div className={styles.inputDiv}>
+                            <input
+                                className={styles.input}
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                multiple
+                            />
+
+                        </div>
 
 
+                    </div>
 
-                    <label>
-                        <input
-                            className={styles.input}
-                            type="number"
-                            placeholder=""
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
-                            required
-                        />
-                        <span>Age</span>
-                    </label>
+                    <div className={styles.btnDiv}>
+                        <button
+                            className={`${styles.btn} ${styles.btnSend}`}
+                            type="submit"
+                            id="submit_btn"
+                        >
+                         {isLoading ? 'Loading...' : 'Add Pet'}
+                        </button>
+                    </div>
 
-                    <label>
-                        <textarea
-                            placeholder="Pet Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        ></textarea>
-                    </label>
-
-                    <label>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            placeholder=""
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            required
-                        />
-                        <span>Category</span>
-                    </label>
-
-                    <button className={styles.submit} type="submit">
-                        Add Pet
-                    </button>
                 </form>
             </div>
         </>
