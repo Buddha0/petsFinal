@@ -2,6 +2,7 @@ import styles from "./allPets.module.css";
 import Nav from "../../components/nav/nav";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Footer from "../../components/footer/footer";
 
 import Card from "../../components/card/card";
 
@@ -9,6 +10,7 @@ export default function AllPets() {
   const [pets, setPets] = useState([]);
   const [filteredPets, setFilteredPets] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     axios
@@ -22,6 +24,13 @@ export default function AllPets() {
       });
   }, []);
 
+  useEffect(() => {
+    const filtered = pets.filter(pet => {
+      return pet.breed.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+    setFilteredPets(filtered);
+  }, [searchQuery, pets]);
+
   const uniqueCategories = ["All", ...new Set(pets.map((pet) => pet.category))];
   const handleCategoryClick = (category) => {
     setSelectedCategory(category); // Update the selected category
@@ -33,8 +42,10 @@ export default function AllPets() {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
-  
   return (
     <>
       <Nav />
@@ -61,6 +72,14 @@ export default function AllPets() {
             </div>
           </div>
 
+          {/* Search box */}
+          <input
+            type="text"
+            placeholder="Search by breed"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+
           <div className={styles.cards}>
             {filteredPets.map((pets) => {
               return <Card pet={pets} key={pets._id} />;
@@ -68,6 +87,7 @@ export default function AllPets() {
           </div>
         </div>
       </div>
+      < Footer/>
     </>
   );
 }

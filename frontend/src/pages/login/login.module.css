@@ -24,24 +24,10 @@
   border-top-right-radius: 12px;
 }
 
-.fa-xmark {
-  position: absolute;
-  font-size: 2rem;
-  cursor: pointer;
-  top: -13px;
-  right: -12px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black;
-  background-color: white;
-}
 
-form {
-  position: relative;
+
+.myForm{
+
   border-radius: 12px;
   font-family: "Raleway", sans-serif;
   width: 450px;
@@ -49,6 +35,9 @@ form {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
 }
 
@@ -81,7 +70,7 @@ textarea {
 
 .formPadding {
   padding: 1rem;
-  width: 75%;
+  width: 100%;
 }
 
 .btnSend {

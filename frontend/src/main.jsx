@@ -7,9 +7,10 @@ import Register from "./pages/register/register";
 import Home from "./pages/home/home";
 import AllPets from "./pages/allPets/allPets";
 import PetsDescription from "./pages/petsDescription/petsDescription";
-import CreatePets from "./pages/createPets/createPets";
+import CreatePets from "./dashboard/dashboardPages/createPets/createPets";
 import Favourites from "./pages/favourites/favourites";
 import DashboardHome from "./dashboard/dashboardPages/dashboardHome/dashboardHome";
+import EditPets from "./dashboard/dashboardPages/editPets/editPets";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardHome/>,
+  },
+  {
+    path: "/editPets/:id",
+    element: <EditPets/>,
   },
 ]);
 

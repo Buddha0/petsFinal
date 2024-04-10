@@ -14,6 +14,7 @@
   width: 100%;
   min-height: 100vh;
   padding: 2rem;
+
 }
 
 .gif {
@@ -24,23 +25,8 @@
   border-top-right-radius: 12px;
 }
 
-.fa-xmark {
-  position: absolute;
-  font-size: 2rem;
-  cursor: pointer;
-  top: -13px;
-  right: -12px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black;
-  background-color: white;
-}
 
-form {
+.myForm {
   position: relative;
   border-radius: 12px;
   font-family: "Raleway", sans-serif;
@@ -53,9 +39,10 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap:0rem !important;
 }
 
-form p {
+.myForm p {
   text-align: center;
   margin: 1rem;
 }
@@ -92,7 +79,7 @@ textarea {
 
 .formPadding {
   padding: 1rem;
-  width: 75%;
+  width: 100%;
 }
 
 .btnSend {
@@ -105,6 +92,7 @@ textarea {
   cursor: pointer;
   color: white;
   border-radius: 10px;
+  width:100%;
 }
 
 .message {

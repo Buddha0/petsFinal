@@ -66,8 +66,9 @@ export default function DashboardHome() {
 
                                             <div className={styles.buttons}>
                                                 < Link to="/create">          <button className={`${styles.btn} ${styles.addBtn}`}>Add</button> </Link>
+                                                <Link to = {`/editPets/${pet._id}`}> <button className={`${styles.btn} ${styles.editBtn}`}>Edit</button></Link>
 
-                                                <button className={`${styles.btn} ${styles.editBtn}`}>Edit</button>
+                                            
                                                 <button className={`${styles.btn} ${styles.deleteBtn}`} onClick={() => handlePetDelete(pet._id)}>Delete</button>
 
 

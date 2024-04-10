@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import "../../index.css";
+
 import styles from "./createPets.module.css";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
