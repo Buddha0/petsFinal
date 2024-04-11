@@ -51,6 +51,12 @@ export default function DashboardNav() {
               </Link>
            
             </li>
+            <li className={styles.list}>
+              <Link to="/login" className={styles.text}>
+                Logout
+              </Link>
+           
+            </li>
            
 
            
