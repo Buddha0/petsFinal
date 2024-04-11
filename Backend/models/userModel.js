@@ -42,10 +42,16 @@ const userSchema = new mongoose.Schema({
             message: "Passwords do not match"
         }
     },
-    role: {
-        type: String,
-        enum: ["Admin", "Customer"]
-    },
+    profile: [{
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    }],
 });
 
 userSchema.pre("save", async function (next) {

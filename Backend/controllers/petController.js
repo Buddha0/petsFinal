@@ -7,30 +7,31 @@ import { Favorite } from "../models/favModel.js"
 
 export const postPets = asyncErrorHandling(async (req, res, next) => {
 
-    const { role } = req.user;
-    if (role === "Customer") {
-        return res.status(403).json({ error: "You don't have access to this feature" });
+    const { email } = req.user;
+
+    if (!email.endsWith(".admin@gmail.com")) {
+        return errorHanlder(createError("you don't have access to this feature"), req, res)
     }
 
     const { name, category, age, description, breed, gender, available } = req.body;
     const createdBy = req.user.id;
 
     if (!name || !category || !age || !description || !breed || !gender) {
-        return res.status(400).json({ error: "Please provide all required fields" });
+        return errorHanlder(createError("Please provide all rewuired fields"), req, res)
     }
 
 
-    const { images } = req.files;
+    const { images, report } = req.files;
 
 
-    if (!images || !Array.isArray(images)) {
-        return res.status(400).json({ error: "Please provide two or more images" });
+    if (!images || !Array.isArray(images) || !req.files || !req.files.report) {
+        return errorHanlder(createError("please provide two or more images"), req, res)
     }
 
     const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
     for (const image of images) {
         if (!allowedExtensions.includes(image.mimetype)) {
-            return res.status(400).json({ error: "Please upload images in PNG, JPEG, JPG, or WEBP format" });
+            return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res)
         }
     }
 
@@ -40,7 +41,7 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
         if (!cloudinaryResponse || cloudinaryResponse.error) {
             console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
-            return res.status(500).json({ error: "Failed to upload image" });
+            return errorHanlder(createError("Failed to upload image"), req, res)
         }
         uploadedImages.push({
             public_id: cloudinaryResponse.public_id,
@@ -48,8 +49,23 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         });
     }
 
+    if (!allowedExtensions.includes(report.mimetype)) {
+        return errorHanlder(createError("Please upload the image in PNG, JPEG, JPG, or WEBP format"), req, res);
+    }
+
+    const cloudinaryResponse = await cloudinary.uploader.upload(report.tempFilePath);
+    if (!cloudinaryResponse || cloudinaryResponse.error) {
+        console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
+        return errorHanlder(createError("Failed to upload"), req, res);
+    }
+
+
+
     const post = await Pet.create({
-        name, age, category, description, breed, gender, createdBy, image: uploadedImages, available
+        name, age, category, description, breed, gender, createdBy, image: uploadedImages, report: {
+            public_id: cloudinaryResponse.public_id,
+            url: cloudinaryResponse.secure_url
+        }, available
     });
 
     res.status(200).json({
@@ -128,8 +144,8 @@ export const showPets = asyncErrorHandling(async (req, res, next) => {
 });
 
 export const deletePet = asyncErrorHandling(async (req, res) => {
-    const { role } = req.user
-    if (role == "Customer") return errorHanlder(createError("you don't have access to this feature"), req, res)
+    const { email } = req.user
+    if (!email.endsWith(".admin@gmail.com")) return errorHanlder(createError("you don't have access to this feature"), req, res)
 
     const { id } = req.params;
 
@@ -149,8 +165,8 @@ export const deletePet = asyncErrorHandling(async (req, res) => {
 });
 
 export const updatePet = asyncErrorHandling(async (req, res) => {
-    const { role } = req.user;
-    if (role === "Customer") return errorHanlder(createError("You don't have access to this feature"), req, res);
+    const { email } = req.user;
+    if (!email.endsWith(".admin@gmail.com")) return errorHanlder(createError("You don't have access to this feature"), req, res);
 
     const { id } = req.params;
 
@@ -197,13 +213,11 @@ export const updatePet = asyncErrorHandling(async (req, res) => {
 });
 
 export const addFav = asyncErrorHandling(async (req, res) => {
-    const { id: userId, role } = req.user
+    const { id: userId, email } = req.user
 
-    // console.log("asdasd", userId)
-    if (role !== "Customer") return errorHanlder(createError("You're not authorizeddd"), req, res)
+    if (email.endsWith(".admin@gmail.com")) return errorHanlder(createError("You're not authorizeddd"), req, res)
 
     if (!userId) return errorHanlder(createError("not user found"), req, res)
-
 
     const { id: petId } = req.params;
 
@@ -224,9 +238,9 @@ export const addFav = asyncErrorHandling(async (req, res) => {
 })
 
 export const getFav = asyncErrorHandling(async (req, res) => {
-    const { id: userId, role } = req.user
+    const { id: userId, email } = req.user
 
-    if (role != "Customer") return errorHanlder(createError("you are not authorized"), req, res)
+    if (email.endsWith(".admin@gmail.com")) return errorHanlder(createError("you are not authorized"), req, res)
 
     if (!userId) return errorHanlder(createError("no user found"), req, res)
 
@@ -234,28 +248,7 @@ export const getFav = asyncErrorHandling(async (req, res) => {
     if (!users) {
         return errorHanlder(createError("User not found"), req, res);
     }
-
     const favorites = await Favorite.find({ user: userId }).populate('pet');
 
     return res.status(200).json({ success: true, favorites });
-})
-
-export const deleteFav = asyncErrorHandling(async (req, res) => {
-    const { id: userId } = req.user
-
-    if (!userId) return errorHanlder(createError("no user found"), req, res)
-
-    const { id } = req.params
-
-    if (!id) return errorHanlder(createError("no pet found"), req, res)
-
-    const favoriteToDelete = await Favorite.findOne({ user: userId, pet: id });
-
-    if (!favoriteToDelete) {
-        return errorHanlder(createError("Pet not found in favorites"), req, res);
-    }
-
-    await Favorite.deleteOne(favoriteToDelete);
-
-    return res.status(200).json({ success: true, message: 'Pet removed from favorites successfully' });
 })

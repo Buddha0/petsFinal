@@ -8,7 +8,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
-
 .navContainer {
   padding: 20px;
 }
@@ -17,7 +16,6 @@
   width: 100px;
   margin-bottom: 20px;
 }
-
 .ul {
   list-style-type: none;
   padding: 0;
