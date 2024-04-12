@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-left: 18%;
   align-items: left;
   padding: 5px 0px;
 }
@@ -24,7 +25,7 @@
   margin: 3rem auto;
 }
 
-.buttons{
+.buttons {
   display: flex;
   gap: 2rem;
 }
@@ -40,23 +41,23 @@
 .flex {
   display: flex;
   align-items: center;
-  gap:3rem;
+  gap: 3rem;
 }
 
-.title{
-    margin: 0px;
+.title {
+  margin: 0px;
 
 }
 
 
-.addBtn{
-    background-color: green;
+.addBtn {
+  background-color: green;
 }
 
-.editBtn{
-    background-color: rgb(168, 168, 16);
+.editBtn {
+  background-color: rgb(168, 168, 16);
 }
 
-.deleteBtn{
-    background-color: red;
+.deleteBtn {
+  background-color: red;
 }
