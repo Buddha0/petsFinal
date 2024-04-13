@@ -7,29 +7,64 @@ import "react-toastify/dist/ReactToastify.css";
 import Nav from "../../components/nav/nav";
 import styles from "./register.module.css";
 
-function Register() {
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [number, setNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("Customer");
-  const [__, setCookie] = useCookies(["token"]);
+function useInput(initialValue, validator) {
+  const [value, setValue] = useState(initialValue);
+  const [error, setError] = useState("");
 
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    setError(validator(e.target.value));
+  };
+
+  return { value, onChange: handleChange, error };
+}
+
+function Register() {
+  const firstname = useInput("", (value) =>
+    value ? "" : "Please enter your first name."
+  );
+  const lastname = useInput("", (value) =>
+    value ? "" : "Please enter your last name."
+  );
+  const number = useInput("", (value) => {
+    if (!value) return "Please enter your phone number.";
+    if (!/^\d{10}$/.test(value)) return "Please enter a valid phone number.";
+    return "";
+  });
+  const email = useInput("", (value) =>
+    value ? "" : "Please enter your email."
+  );
+  const password = useInput("", (value) =>
+    value ? "" : "Please enter your password."
+  );
+  const confirmPassword = useInput("", (value) =>
+    value === password.value ? "" : "Passwords do not match."
+  );
+
+  const [__, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 
   function formSubmit(e) {
     e.preventDefault();
 
+    if (
+      firstname.error ||
+      lastname.error ||
+      number.error ||
+      email.error ||
+      password.error ||
+      confirmPassword.error
+    ) {
+      return;
+    }
+
     const formData = {
-      firstname,
-      lastname,
-      number,
-      email,
-      password,
-      confirmPassword,
-      role,
+      firstname: firstname.value,
+      lastname: lastname.value,
+      number: number.value,
+      email: email.value,
+      password: password.value,
+      confirmPassword: confirmPassword.value,
     };
 
     axios
@@ -60,79 +95,76 @@ function Register() {
       <div className={styles.formSection}>
         <form id="myForm" className={styles.myForm} onSubmit={formSubmit}>
           <ToastContainer bodyClassName="toastBody" />
-          <img src="/new.GIF" className={styles.gif} />
+          <img src="/dribbblepets_v01.gif" className={styles.gif} />
           <p className={styles.message}>Hey there! Want to Register?</p>
           <div className={styles.formPadding}>
             <div className={styles.inputDiv}>
               <input
                 type="text"
                 placeholder="Your First Name"
-                value={firstname}
-                onChange={(e) => setFirstName(e.target.value)}
+                {...firstname}
                 autoComplete="off"
                 required
               />
+              {firstname.error && (
+                <p className={styles.error}>{firstname.error}</p>
+              )}
             </div>
             <div className={styles.inputDiv}>
               <input
                 type="text"
                 placeholder="Your Last Name"
-                value={lastname}
-                onChange={(e) => setLastName(e.target.value)}
+                {...lastname}
                 autoComplete="off"
                 required
               />
+              {lastname.error && (
+                <p className={styles.error}>{lastname.error}</p>
+              )}
             </div>
             <div className={styles.inputDiv}>
               <input
                 type="number"
                 placeholder="Your Phone Number"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
+                {...number}
                 autoComplete="off"
                 required
               />
+              {number.error && <p className={styles.error}>{number.error}</p>}
             </div>
             <div className={styles.inputDiv}>
               <input
                 type="email"
                 placeholder="Your Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...email}
                 autoComplete="off"
                 required
               />
+              {email.error && <p className={styles.error}>{email.error}</p>}
             </div>
             <div className={styles.inputDiv}>
               <input
                 type="password"
                 placeholder="Your Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...password}
                 autoComplete="off"
                 required
               />
+              {password.error && (
+                <p className={styles.error}>{password.error}</p>
+              )}
             </div>
             <div className={styles.inputDiv}>
               <input
                 type="password"
                 placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                {...confirmPassword}
                 autoComplete="off"
                 required
               />
-            </div>
-            <div className={styles.selectDiv}>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-              >
-                <option value="">Select Role</option>
-                <option value="Customer">Customer</option>
-                <option value="Admin">Admin</option>
-              </select>
+              {confirmPassword.error && (
+                <p className={styles.error}>{confirmPassword.error}</p>
+              )}
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./login.module.css";
 import axios from "axios";
@@ -8,20 +8,46 @@ import "react-toastify/dist/ReactToastify.css";
 import { useCookies } from "react-cookie";
 import Nav from "../../components/nav/nav";
 
+const useFormInput = (initialValue, validator) => {
+  const [value, setValue] = useState(initialValue);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    setError(validator(e.target.value));
+  };
+
+  return {
+    value,
+    onChange: handleChange,
+    error,
+    setError,
+  };
+};
+
 export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("Customer");
+  const email = useFormInput("", (value) => {
+    if (!value) return "Please enter your email.";
+    if (!/\S+@\S+\.\S+/.test(value)) return "Invalid email format.";
+    return "";
+  });
+
+  const password = useFormInput("", (value) => {
+    if (!value) return "Please enter your password.";
+    return "";
+  });
+
   const [__, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 
   function formSubmit(e) {
     e.preventDefault();
 
+    if (email.error || password.error) return;
+
     const postData = {
-      email,
-      password,
-      role,
+      email: email.value,
+      password: password.value,
     };
 
     axios
@@ -30,9 +56,9 @@ export default function Register() {
         const token = response?.data?.jwtToken;
         const user = response?.data?.user;
         setCookie("token", token, {
-          path: "/", // Set path to root to make it valid for all paths
-          sameSite: "None", // Set SameSite attribute to None for cross-origin requests
-          secure: true, // Ensure that cookie is only sent over HTTPS
+          path: "/",
+          sameSite: "None",
+          secure: true,
         });
         localStorage.setItem("user", JSON.stringify(user));
         navigate("/");
@@ -42,10 +68,6 @@ export default function Register() {
           type: "error",
         });
       });
-
-    setEmail("");
-    setPassword("");
-    setRole("Customer");
   }
 
   return (
@@ -61,33 +83,23 @@ export default function Register() {
               <input
                 type="email"
                 placeholder="Your Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...email}
                 autoComplete="off"
                 required
               />
+              {email.error && <p className={styles.error}>{email.error}</p>}
             </div>
             <div className={styles.inputDiv}>
               <input
                 type="password"
                 placeholder="Your Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...password}
                 autoComplete="off"
                 required
               />
-            </div>
-
-            <div className={styles.selectDiv}>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-              >
-                <option value="">Select Role</option>
-                <option value="Customer">Customer</option>
-                <option value="Admin">Admin</option>
-              </select>
+              {password.error && (
+                <p className={styles.error}>{password.error}</p>
+              )}
             </div>
           </div>
 

@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema({
     number: {
         type: Number,
         required: [true, "you cannot leave this empty"],
-        minLength: [8, "number cannot be this short"],
-        maxLength: [10, "number cannot be this long"]
+        min: [10000000, "number cannot be this short"],
+        max: [9999999999, "number cannot be this long"]
     },
     email: {
         type: String,

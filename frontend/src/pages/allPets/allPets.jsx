@@ -3,6 +3,7 @@ import Nav from "../../components/nav/nav";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "../../components/footer/footer";
+import { AiOutlineSearch } from "react-icons/ai";
 
 import Card from "../../components/card/card";
 
@@ -10,7 +11,7 @@ export default function AllPets() {
   const [pets, setPets] = useState([]);
   const [filteredPets, setFilteredPets] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     axios
@@ -25,7 +26,7 @@ export default function AllPets() {
   }, []);
 
   useEffect(() => {
-    const filtered = pets.filter(pet => {
+    const filtered = pets.filter((pet) => {
       return pet.breed.toLowerCase().includes(searchQuery.toLowerCase());
     });
     setFilteredPets(filtered);
@@ -56,29 +57,33 @@ export default function AllPets() {
 
         <div className={styles.container}>
           <div className={styles.categories}>
-            <h2 className={styles.smallTitle}>Pet Categories</h2>
-            <div className={styles.box_container}>
-              {uniqueCategories.map((category) => (
-                <div
-                  className={`${styles.box} ${
-                    selectedCategory === category ? styles.selected : ""
-                  }`}
-                  key={category}
-                  onClick={() => handleCategoryClick(category)}
-                >
-                  <h2>{category}</h2>
-                </div>
-              ))}
+            <div className={styles.cat}>
+              <h2 className={styles.smallTitle}>Pet Categories</h2>
+              <div className={styles.box_container}>
+                {uniqueCategories.map((category) => (
+                  <div
+                    className={`${styles.box} ${
+                      selectedCategory === category ? styles.selected : ""
+                    }`}
+                    key={category}
+                    onClick={() => handleCategoryClick(category)}
+                  >
+                    <h2>{category}</h2>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={styles.inputContainer}>
+              <input
+                type="text"
+                placeholder="Search by breed"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className={styles.searchInput}
+              />
+              <AiOutlineSearch size={20} className={styles.searchIcon} />
             </div>
           </div>
-
-          {/* Search box */}
-          <input
-            type="text"
-            placeholder="Search by breed"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
 
           <div className={styles.cards}>
             {filteredPets.map((pets) => {
@@ -87,7 +92,7 @@ export default function AllPets() {
           </div>
         </div>
       </div>
-      < Footer/>
+      <Footer />
     </>
   );
 }

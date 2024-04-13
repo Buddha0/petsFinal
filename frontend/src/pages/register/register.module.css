@@ -23,6 +23,7 @@
   height: 200px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  mix-blend-mode: multiply;
 }
 
 
@@ -39,7 +40,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap:0rem !important;
+  gap: 0rem !important;
 }
 
 .myForm p {
@@ -49,9 +50,7 @@
 
 .inputDiv {
   width: 100%;
-  background-color: rgb(5, 5, 5);
   margin: 2rem 0rem;
-  border-bottom: 1px solid rgb(209, 204, 204);
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -92,7 +91,7 @@ textarea {
   cursor: pointer;
   color: white;
   border-radius: 10px;
-  width:100%;
+  width: 100%;
 }
 
 .message {
@@ -136,4 +135,10 @@ input:focus,
 textarea:focus,
 select:focus {
   border-bottom: 1px solid #007bff;
+}
+
+.inputDiv>.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
 }
