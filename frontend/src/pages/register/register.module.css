@@ -51,6 +51,8 @@
 .inputDiv {
   width: 100%;
   margin: 2rem 0rem;
+  border-bottom: 1px solid rgb(209, 204, 204);
+
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -111,25 +113,6 @@ textarea {
   color: rgb(54, 54, 54)
 }
 
-.selectDiv {
-  width: 100%;
-  margin: 2rem 0;
-}
-
-select {
-  border: none;
-  outline: none;
-  width: 100%;
-  padding: 0.5rem 1rem;
-  background-color: transparent;
-  color: rgb(117 117 117);
-  border-bottom: 1px solid rgb(209, 204, 204);
-}
-
-select option {
-  background-color: #1a1a1a;
-  color: white;
-}
 
 input:focus,
 textarea:focus,
@@ -137,8 +120,7 @@ select:focus {
   border-bottom: 1px solid #007bff;
 }
 
-.inputDiv>.error {
+.error {
   color: red;
-  font-size: 14px;
-  margin-top: 5px;
+  font-size: 10px;
 }

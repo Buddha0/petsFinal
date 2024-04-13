@@ -29,7 +29,6 @@ export default function CreatePets() {
 
     const formData = new FormData();
 
-    // Append form fields
     formData.append("name", name);
     formData.append("category", category);
     formData.append("age", age);
@@ -37,7 +36,6 @@ export default function CreatePets() {
     formData.append("breed", breed);
     formData.append("gender", gender);
 
-    // Append images
     images.forEach((image, index) => {
       formData.append(`images`, image);
     });
@@ -49,7 +47,6 @@ export default function CreatePets() {
         formData,
         {
           headers: {
-            // Set Authorization header with the token value
             authorization: cookies.token,
           },
         }
@@ -110,7 +107,7 @@ export default function CreatePets() {
             </div>
 
             <div className={styles.inputDiv}>
-              <input
+              <textarea
                 type="text"
                 placeholder="About pet"
                 value={description}

@@ -87,8 +87,8 @@ export default function Register() {
                 autoComplete="off"
                 required
               />
-              {email.error && <p className={styles.error}>{email.error}</p>}
             </div>
+            {email.error && <p className={styles.error}>{email.error}</p>}
             <div className={styles.inputDiv}>
               <input
                 type="password"
@@ -97,10 +97,8 @@ export default function Register() {
                 autoComplete="off"
                 required
               />
-              {password.error && (
-                <p className={styles.error}>{password.error}</p>
-              )}
             </div>
+            {password.error && <p className={styles.error}>{password.error}</p>}
           </div>
 
           <div className={styles.btnDiv}>

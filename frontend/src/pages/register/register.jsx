@@ -106,10 +106,10 @@ function Register() {
                 autoComplete="off"
                 required
               />
-              {firstname.error && (
-                <p className={styles.error}>{firstname.error}</p>
-              )}
             </div>
+            {firstname.error && (
+              <p className={styles.error}>{firstname.error}</p>
+            )}
             <div className={styles.inputDiv}>
               <input
                 type="text"
@@ -118,10 +118,8 @@ function Register() {
                 autoComplete="off"
                 required
               />
-              {lastname.error && (
-                <p className={styles.error}>{lastname.error}</p>
-              )}
             </div>
+            {lastname.error && <p className={styles.error}>{lastname.error}</p>}
             <div className={styles.inputDiv}>
               <input
                 type="number"
@@ -130,8 +128,8 @@ function Register() {
                 autoComplete="off"
                 required
               />
-              {number.error && <p className={styles.error}>{number.error}</p>}
             </div>
+            {number.error && <p className={styles.error}>{number.error}</p>}
             <div className={styles.inputDiv}>
               <input
                 type="email"
@@ -140,8 +138,8 @@ function Register() {
                 autoComplete="off"
                 required
               />
-              {email.error && <p className={styles.error}>{email.error}</p>}
             </div>
+            {email.error && <p className={styles.error}>{email.error}</p>}
             <div className={styles.inputDiv}>
               <input
                 type="password"
@@ -150,10 +148,8 @@ function Register() {
                 autoComplete="off"
                 required
               />
-              {password.error && (
-                <p className={styles.error}>{password.error}</p>
-              )}
             </div>
+            {password.error && <p className={styles.error}>{password.error}</p>}
             <div className={styles.inputDiv}>
               <input
                 type="password"
@@ -162,10 +158,10 @@ function Register() {
                 autoComplete="off"
                 required
               />
-              {confirmPassword.error && (
-                <p className={styles.error}>{confirmPassword.error}</p>
-              )}
             </div>
+            {confirmPassword.error && (
+              <p className={styles.error}>{confirmPassword.error}</p>
+            )}
           </div>
 
           <div className={styles.btnDiv}>

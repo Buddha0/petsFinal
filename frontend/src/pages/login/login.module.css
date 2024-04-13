@@ -47,9 +47,8 @@ form p {
 
 .inputDiv {
   width: 100%;
-  /* backgrosund-color: rgb(5, 5, 5); */
   margin: 2rem 0rem;
-  /* border-bottom: 1px solid rgb(209, 204, 204); */
+  border-bottom: 1px solid rgb(209, 204, 204);
 }
 
 input,
@@ -123,7 +122,8 @@ select option {
 }
 
 
-.inputDiv>.error {
+.error {
+  position: relative;
   color: red;
   font-size: 14px;
   margin-top: 5px;
