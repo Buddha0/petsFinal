@@ -1,5 +1,3 @@
-// models/Favorite.js
-
 import mongoose from 'mongoose'
 
 const favoriteSchema = new mongoose.Schema({

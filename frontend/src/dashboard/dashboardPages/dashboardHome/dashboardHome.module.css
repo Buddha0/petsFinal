@@ -1,3 +1,19 @@
+.pageNmae {
+  font-size: 30px;
+  color: black;
+  text-align: center;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+hr {
+  width: 85%;
+  margin-left: 15%;
+  margin-top: 10px;
+}
+
 .cards {
   width: 100%;
   display: flex;
@@ -23,6 +39,19 @@
 .container {
   max-width: 1200px;
   margin: 3rem auto;
+
+}
+
+.buttonsContainer {
+  padding: 20px;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.reqBtn {
+  background-color: green;
+  width: 100%;
 }
 
 .buttons {
@@ -30,12 +59,13 @@
   gap: 2rem;
 }
 
+
 .btn {
   padding: 1rem 2rem;
   cursor: pointer;
   border: none;
-  background-color: black;
   color: white;
+  margin-left: 18%;
 }
 
 .flex {
@@ -46,12 +76,14 @@
 
 .title {
   margin: 0px;
-
 }
-
 
 .addBtn {
   background-color: green;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  border: none;
+  color: white;
 }
 
 .editBtn {

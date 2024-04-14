@@ -42,7 +42,19 @@ export default function DashboardHome() {
   return (
     <>
       <DashboardNav />
+      <div className={styles.pageNmae}>Manage Pets</div>
+      <div className={styles.buttonsContainer}>
+        <Link to="/create">
+          <button className={`${styles.btn} ${styles.addBtn}`}>Add</button>
+        </Link>
+        <Link to="/create">
+          <button className={`${styles.btn} ${styles.reqBtn}`}>
+            Post request
+          </button>
+        </Link>
+      </div>
 
+      <hr />
       <div className={styles.cards}>
         {pets.map((pet, index) => {
           return (
@@ -59,11 +71,6 @@ export default function DashboardHome() {
                   <p>12</p>
                 </div>
                 <div className={styles.buttons}>
-                  <Link to="/create">
-                    <button className={`${styles.btn} ${styles.addBtn}`}>
-                      Add
-                    </button>
-                  </Link>
                   <Link to={`/editPets/${pet._id}`}>
                     <button className={`${styles.btn} ${styles.editBtn}`}>
                       Edit

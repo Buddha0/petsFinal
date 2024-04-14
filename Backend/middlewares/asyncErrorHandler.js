@@ -3,4 +3,3 @@ export const asyncErrorHandling = (checkFunc) => {
         checkFunc(req, res, next).catch(next);
     };
 };
-

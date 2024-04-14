@@ -19,11 +19,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/favourites",
-    element: <Favourites  />,
+    element: <Favourites />,
   },
   {
     path: "/create",
-    element: <CreatePets  />,
+    element: <CreatePets />,
   },
   {
     path: "/login",
@@ -40,15 +40,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/petDescription/:id",
-    element: <PetsDescription/>,
+    element: <PetsDescription />,
   },
   {
     path: "/dashboard",
-    element: <DashboardHome/>,
+    element: <DashboardHome />,
+  },
+  {
+    path: "/managepets",
+    element: <DashboardHome />,
   },
   {
     path: "/editPets/:id",
-    element: <EditPets/>,
+    element: <EditPets />,
   },
 ]);
 

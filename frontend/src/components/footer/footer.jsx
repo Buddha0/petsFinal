@@ -20,7 +20,7 @@ export default function Footer() {
 
             <div className={styles.additional_info}>
               <p>Jhamsikhel,Lalitpur</p>
-              <p>01-4314612</p>
+              <p>9849444046</p>
               <p>info@petsnepal.com</p>
             </div>
           </div>

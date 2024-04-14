@@ -31,8 +31,8 @@ export default function DashboardNav() {
   return (
     <>
       <nav className={styles.nav}>
+        <div className={styles.logo}>Pets nepal</div>
         <div className={styles.navContainer}>
-          <img src="../logo.png" className={styles.logo}></img>
           <ul className={styles.ul}>
             <li className={styles.list}>
               <Link to="/dashboard" className={styles.text}>
@@ -45,7 +45,7 @@ export default function DashboardNav() {
               </Link>
             </li>
             <li className={styles.list}>
-              <Link to="/allPets" className={styles.text}>
+              <Link to="/managepets" className={styles.text}>
                 Manage Pets
               </Link>
             </li>
