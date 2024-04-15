@@ -1,92 +1,83 @@
-import { useEffect, useState } from "react";
 import DashboardNav from "../../dashboardComponents/dashboardNav/dashboardNav";
-import styles from "./dashboardHome.module.css";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import "./dashboardHome.scss";
+import "chart.js/auto";
+import { Chart } from "react-chartjs-2";
 
 export default function DashboardHome() {
-  const [pets, setPets] = useState([]);
-  const [cookies, __] = useCookies(["token"]);
+  const barChartData = {
+    labels: ["All Pets", "Adopted Pets"],
+    datasets: [
+      {
+        label: "Pets",
+        data: [50, 10],
+        borderWidth: 1,
+      },
+    ],
+  };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/petFinder/get")
-      .then(function (response) {
-        setPets(response.data.getallpets);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
-
-  function handlePetDelete(petId) {
-    axios
-      .delete(`http://localhost:3000/petFinder/delete/${petId}`, {
-        headers: {
-          authorization: cookies.token,
-        },
-      })
-      .then(function (response) {
-        alert("Pet deleted successfully");
-
-        const updatedPets = pets.filter((pet) => pet._id !== petId);
-
-        setPets(updatedPets);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
+  const pieChartData = {
+    labels: ["Dogs", "Cats", "Others"],
+    datasets: [
+      {
+        label: "Pet Cateogries",
+        data: [50, 10, 20],
+        borderWidth: 1,
+        backgroundColor: [
+          "rgba(255,99,132,1)",
+          "rgba(50,40,132,1)",
+          "rgba(5,99,132,1)",
+        ],
+      },
+    ],
+  };
   return (
     <>
       <DashboardNav />
-      <div className={styles.pageNmae}>Manage Pets</div>
-      <div className={styles.buttonsContainer}>
-        <Link to="/create">
-          <button className={`${styles.btn} ${styles.addBtn}`}>Add</button>
-        </Link>
-        <Link to="/create">
-          <button className={`${styles.btn} ${styles.reqBtn}`}>
-            Post request
-          </button>
-        </Link>
-      </div>
-
-      <hr />
-      <div className={styles.cards}>
-        {pets.map((pet, index) => {
-          return (
-            <div className={styles.card} key={index}>
-              <div className={styles.flex}>
-                <img
-                  src="https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*"
-                  className={styles.img}
-                  alt="pet"
-                />
-                <div className={styles.description}>
-                  <h1 className={styles.title}>{pet?.name}</h1>
-                  <p>German</p>
-                  <p>12</p>
-                </div>
-                <div className={styles.buttons}>
-                  <Link to={`/editPets/${pet._id}`}>
-                    <button className={`${styles.btn} ${styles.editBtn}`}>
-                      Edit
-                    </button>
-                  </Link>
-                  <button
-                    className={`${styles.btn} ${styles.deleteBtn}`}
-                    onClick={() => handlePetDelete(pet._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
+      <div className="dashboard_home">
+        <div className="container">
+          <div className="cards">
+            <div className="card">
+              <div className="description">
+                <h1>200</h1>
+                <p>Total Pets</p>
               </div>
+              <img src="../adopted.png"></img>
             </div>
-          );
-        })}
+
+            <div className="card">
+              <div className="description">
+                <h1>200</h1>
+                <p>Total Pets</p>
+              </div>
+              <img src="../adopted.png"></img>
+            </div>
+
+            <div className="card">
+              <div className="description">
+                <h1>200</h1>
+                <p>Total Pets</p>
+              </div>
+              <img src="../adopted.png"></img>
+            </div>
+
+            <div className="card">
+              <div className="description">
+                <h1>200</h1>
+                <p>Total Pets</p>
+              </div>
+              <img src="../adopted.png"></img>
+            </div>
+          </div>
+          <div className="chart_container">
+            <div className="bar_chart">
+              <Chart type="bar" data={barChartData} />
+            </div>
+
+            <div className="pie_chart">
+              <Chart type="pie" data={pieChartData} />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

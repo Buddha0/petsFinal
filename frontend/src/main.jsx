@@ -11,6 +11,7 @@ import CreatePets from "./dashboard/dashboardPages/createPets/createPets";
 import Favourites from "./pages/favourites/favourites";
 import DashboardHome from "./dashboard/dashboardPages/dashboardHome/dashboardHome";
 import EditPets from "./dashboard/dashboardPages/editPets/editPets";
+import DashboardPets from "./dashboard/dashboardPages/dashboardPets/dashboardPets";
 
 const router = createBrowserRouter([
   {
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/managepets",
-    element: <DashboardHome />,
+    element: <DashboardPets />,
   },
   {
     path: "/editPets/:id",

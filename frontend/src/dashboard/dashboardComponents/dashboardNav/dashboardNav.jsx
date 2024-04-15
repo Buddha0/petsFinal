@@ -31,17 +31,14 @@ export default function DashboardNav() {
   return (
     <>
       <nav className={styles.nav}>
-        <div className={styles.logo}>Pets nepal</div>
         <div className={styles.navContainer}>
+          <Link to="/">
+            <img src="../logo.png" className={styles.logo}></img>
+          </Link>
           <ul className={styles.ul}>
             <li className={styles.list}>
               <Link to="/dashboard" className={styles.text}>
-                Dashboard
-              </Link>
-            </li>
-            <li className={styles.list}>
-              <Link to="/" className={styles.text}>
-                Manage Users
+                Home
               </Link>
             </li>
             <li className={styles.list}>
@@ -50,10 +47,30 @@ export default function DashboardNav() {
               </Link>
             </li>
             <li className={styles.list}>
-              <Link to="/login" className={styles.text}>
-                Logout
+              <Link to="/allPets" className={styles.text}>
+                Manage Users
               </Link>
             </li>
+            <li className={styles.list}>
+              <Link to="/favourites" className={styles.text}>
+                Post requests
+              </Link>
+            </li>
+
+            {!cookies.token && (
+              <>
+                <li className={styles.list}>
+                  <Link to="/register" className={styles.text}>
+                    Register
+                  </Link>
+                </li>
+                <li className={styles.list}>
+                  <Link to="/login" className={styles.text}>
+                    Login
+                  </Link>
+                </li>
+              </>
+            )}
 
             <li className={styles.list}>
               {loggedInUser && cookies?.token && (
