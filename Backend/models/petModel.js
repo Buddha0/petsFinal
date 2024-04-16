@@ -48,11 +48,11 @@ const petSchema = new mongoose.Schema({
     report: [{
         public_id: {
             type: String,
-            required: true
+            // required: true
         },
         url: {
             type: String,
-            required: true
+            // required: true
         }
     }],
     date: {

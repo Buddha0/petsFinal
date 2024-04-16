@@ -6,26 +6,23 @@ import { user } from "../models/userModel.js"
 import { Favorite } from "../models/favModel.js"
 
 export const postPets = asyncErrorHandling(async (req, res, next) => {
-
     const { email } = req.user;
 
     if (!email.endsWith(".admin@gmail.com")) {
-        return errorHanlder(createError("you don't have access to this feature"), req, res)
+        return errorHanlder(createError("You don't have access to this feature"), req, res)
     }
 
     const { name, category, age, description, breed, gender, available } = req.body;
     const createdBy = req.user.id;
 
     if (!name || !category || !age || !description || !breed || !gender) {
-        return errorHanlder(createError("Please provide all rewuired fields"), req, res)
+        return errorHanlder(createError("Please provide all required fields"), req, res)
     }
-
 
     const { images, report } = req.files;
 
-
-    if (!images || !Array.isArray(images) || !req.files || !req.files.report) {
-        return errorHanlder(createError("please provide two or more images"), req, res)
+    if (!images || !Array.isArray(images) || images.length < 2) {
+        return errorHanlder(createError("Please provide two or more images"), req, res)
     }
 
     const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
@@ -49,23 +46,26 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         });
     }
 
-    if (!allowedExtensions.includes(report.mimetype)) {
-        return errorHanlder(createError("Please upload the image in PNG, JPEG, JPG, or WEBP format"), req, res);
+    let sendReport = {};
+
+    if (report) {
+        if (!allowedExtensions.includes(report.mimetype)) {
+            return errorHanlder(createError("Please upload the report in PNG, JPEG, JPG, or WEBP format"), req, res);
+        }
+
+        const reportCloudinaryResponse = await cloudinary.uploader.upload(report.tempFilePath);
+        if (!reportCloudinaryResponse || reportCloudinaryResponse.error) {
+            console.log("Cloudinary error:", reportCloudinaryResponse.error || "Unknown Cloudinary error");
+            return errorHanlder(createError("Failed to upload report"), req, res);
+        }
+        sendReport = {
+            public_id: reportCloudinaryResponse.public_id,
+            url: reportCloudinaryResponse.secure_url
+        };
     }
-
-    const cloudinaryResponse = await cloudinary.uploader.upload(report.tempFilePath);
-    if (!cloudinaryResponse || cloudinaryResponse.error) {
-        console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
-        return errorHanlder(createError("Failed to upload"), req, res);
-    }
-
-
 
     const post = await Pet.create({
-        name, age, category, description, breed, gender, createdBy, image: uploadedImages, report: {
-            public_id: cloudinaryResponse.public_id,
-            url: cloudinaryResponse.secure_url
-        }, available
+        name, age, category, description, breed, gender, createdBy, image: uploadedImages, report: sendReport, available
     });
 
     res.status(200).json({
@@ -73,7 +73,9 @@ export const postPets = asyncErrorHandling(async (req, res, next) => {
         message: "Posted about pets",
         post
     });
-})
+});
+
+
 
 export const getpets = asyncErrorHandling(async (req, res) => {
     const getallpets = await Pet.find({ available: true })
