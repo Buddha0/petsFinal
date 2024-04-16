@@ -4,6 +4,7 @@ import axios from "axios";
 import Card from "../../components/card/card";
 import styles from "./favourites.module.css";
 import Nav from "../../components/nav/nav";
+import { toast } from "react-toastify";
 
 export default function Favourites() {
   const [favourites, setFavourites] = useState([]);

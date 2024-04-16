@@ -37,6 +37,11 @@ export default function DashboardNav() {
           </Link>
           <ul className={styles.ul}>
             <li className={styles.list}>
+              <Link to="/" className={styles.text}>
+                User dashboard
+              </Link>
+            </li>
+            <li className={styles.list}>
               <Link to="/dashboard" className={styles.text}>
                 Home
               </Link>
@@ -47,7 +52,7 @@ export default function DashboardNav() {
               </Link>
             </li>
             <li className={styles.list}>
-              <Link to="/allPets" className={styles.text}>
+              <Link to="/manageusers" className={styles.text}>
                 Manage Users
               </Link>
             </li>

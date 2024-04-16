@@ -7,6 +7,7 @@ export default function Nav() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showDropDown, setShowDropDown] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
@@ -14,6 +15,10 @@ export default function Nav() {
 
     if (userFromLocalStorage && tokenFromCookies) {
       setLoggedInUser(userFromLocalStorage);
+
+      if (userFromLocalStorage.email.includes("admin@gmail.com")) {
+        setIsAdmin(true);
+      }
     }
   }, [cookies.token]);
 
@@ -22,6 +27,7 @@ export default function Nav() {
     setShowDropDown(false);
     setLoggedInUser(null);
     removeCookie("token");
+    setIsAdmin(false);
   }
 
   function handleSettingClick() {
@@ -51,11 +57,36 @@ export default function Nav() {
                 Available Pets
               </Link>
             </li>
-            <li className={styles.list}>
-              <Link to="/favourites" className={styles.text}>
-                Favourite
-              </Link>
-            </li>
+            {!isAdmin ? (
+              <li className={styles.list}>
+                <Link to="/favourites" className={styles.text}>
+                  Favourite
+                </Link>
+              </li>
+            ) : (
+              ""
+            )}
+            {cookies.token ? (
+              <li className={styles.list}>
+                <Link to="/favourites" className={styles.text}>
+                  Favourite
+                </Link>
+              </li>
+            ) : (
+              ""
+            )}
+
+            {isAdmin ? (
+              <>
+                <li className={styles.list}>
+                  <Link to="/dashboard" className={styles.text}>
+                    Admin Dashboard
+                  </Link>
+                </li>
+              </>
+            ) : (
+              ""
+            )}
 
             {!cookies.token && (
               <>

@@ -12,6 +12,7 @@ import Favourites from "./pages/favourites/favourites";
 import DashboardHome from "./dashboard/dashboardPages/dashboardHome/dashboardHome";
 import EditPets from "./dashboard/dashboardPages/editPets/editPets";
 import DashboardPets from "./dashboard/dashboardPages/dashboardPets/dashboardPets";
+import ManageUsers from "./dashboard/dashboardPages/manageUsers/manageUsers";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/editPets/:id",
     element: <EditPets />,
+  },
+  {
+    path: "/manageusers",
+    element: <ManageUsers />,
   },
 ]);
 
