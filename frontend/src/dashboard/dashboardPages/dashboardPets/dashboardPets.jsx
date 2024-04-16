@@ -72,7 +72,10 @@ export default function DashboardPets() {
                           className="delete_btn"
                           onClick={() => handlePetDelete(pet._id)}
                         />
-                        <CiEdit className="edit_btn" />
+                            <Link to={`/editPets/${pet._id}`}>
+                            <CiEdit className="edit_btn" />
+                            </Link>
+                       
                       </div>
                     </div>
                   </div>
