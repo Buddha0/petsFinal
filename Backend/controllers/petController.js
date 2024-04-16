@@ -166,53 +166,114 @@ export const deletePet = asyncErrorHandling(async (req, res) => {
     });
 });
 
+// export const updatePet = asyncErrorHandling(async (req, res) => {
+//     const { email } = req.user;
+//     if (!email.endsWith(".admin@gmail.com")) return errorHanlder(createError("You don't have access to this feature"), req, res);
+
+//     const { id } = req.params;
+
+//     let petToUpdate = await Pet.findById(id);
+//     if (!petToUpdate) {
+//         return errorHanlder(createError("Could not find the pet"), req, res);
+//     }
+
+//     if (req.files && req.files.images && req.files.images.length > 0) {
+//         const { images } = req.files;
+//         const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+
+//         for (const image of images) {
+//             if (!allowedExtensions.includes(image.mimetype)) {
+//                 return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res);
+//             }
+//         }
+
+//         const uploadedImages = [];
+
+//         for (const image of images) {
+//             const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
+//             if (!cloudinaryResponse || cloudinaryResponse.error) {
+//                 console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
+//                 return errorHanlder(createError("Failed to upload images"), req, res);
+//             }
+//             uploadedImages.push({
+//                 public_id: cloudinaryResponse.public_id,
+//                 url: cloudinaryResponse.secure_url
+//             });
+//         }
+//         petToUpdate.image = uploadedImages;
+//     }
+
+//     Object.assign(petToUpdate, req.body);
+
+//     const updatedPet = await petToUpdate.save();
+
+//     res.status(200).send({
+//         success: true,
+//         message: "Pet data updated successfully",
+//         updatedPet
+//     });
+// });
+
 export const updatePet = asyncErrorHandling(async (req, res) => {
     const { email } = req.user;
-    if (!email.endsWith(".admin@gmail.com")) return errorHanlder(createError("You don't have access to this feature"), req, res);
-
+    if (!email.endsWith(".admin@gmail.com")) {
+      console.error("Access denied for user:", email);
+      return errorHanlder(createError("You don't have access to this feature"), req, res);
+    }
+  
     const { id } = req.params;
-
+  
     let petToUpdate = await Pet.findById(id);
     if (!petToUpdate) {
-        return errorHanlder(createError("Could not find the pet"), req, res);
+      console.error("Pet not found for ID:", id);
+      return errorHanlder(createError("Could not find the pet"), req, res);
     }
-
+  
     if (req.files && req.files.images && req.files.images.length > 0) {
-        const { images } = req.files;
-        const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
-
-        for (const image of images) {
-            if (!allowedExtensions.includes(image.mimetype)) {
-                return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res);
-            }
+      const { images } = req.files;
+      const allowedExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+  
+      const uploadedImages = [];
+  
+      for (const image of images) {
+        if (!allowedExtensions.includes(image.mimetype)) {
+          console.error("Invalid image format:", image.mimetype);
+          return errorHanlder(createError("Please upload images in PNG, JPEG, JPG, or WEBP format"), req, res);
         }
-
-        const uploadedImages = [];
-
-        for (const image of images) {
-            const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
-            if (!cloudinaryResponse || cloudinaryResponse.error) {
-                console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
-                return errorHanlder(createError("Failed to upload images"), req, res);
-            }
-            uploadedImages.push({
-                public_id: cloudinaryResponse.public_id,
-                url: cloudinaryResponse.secure_url
-            });
+  
+        const cloudinaryResponse = await cloudinary.uploader.upload(image.tempFilePath);
+        if (!cloudinaryResponse || cloudinaryResponse.error) {
+          console.error("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
+          return errorHanlder(createError("Failed to upload images"), req, res);
         }
-        petToUpdate.image = uploadedImages;
+  
+        uploadedImages.push({
+          public_id: cloudinaryResponse.public_id,
+          url: cloudinaryResponse.secure_url
+        });
+      }
+  
+      petToUpdate.image = uploadedImages;
     }
-
+  
     Object.assign(petToUpdate, req.body);
-
-    const updatedPet = await petToUpdate.save();
-
-    res.status(200).send({
+  
+    try {
+      const updatedPet = await petToUpdate.save();
+      res.status(200).send({
         success: true,
         message: "Pet data updated successfully",
         updatedPet
-    });
-});
+      });
+    } catch (error) {
+      console.error("Database save error:", error.message);
+      return errorHanlder(createError("Failed to update pet data"), req, res);
+    }
+  });
+  
+  
+
+  
 
 export const addFav = asyncErrorHandling(async (req, res) => {
     const { id: userId, email } = req.user
