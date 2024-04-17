@@ -12,8 +12,7 @@ import Favourites from "./pages/favourites/favourites";
 import DashboardHome from "./dashboard/dashboardPages/dashboardHome/dashboardHome";
 import EditPets from "./dashboard/dashboardPages/editPets/editPets";
 import DashboardPets from "./dashboard/dashboardPages/dashboardPets/dashboardPets";
-
-
+// import ManageUsers from "./dashboard/dashboardPages/manageUsers/manageUsers";
 
 const router = createBrowserRouter([
   {
@@ -53,15 +52,18 @@ const router = createBrowserRouter([
     path: "/managepets",
     element: <DashboardPets />,
   },
+  // {
+  //   path: "/manageusers",
+  //   element: <ManageUsers />,
+  // },
   {
     path: "/editPets/:id",
     element: <EditPets />,
   },
- 
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <RouterProvider router={router} />
+  // <React.StrictMode>
+  // </React.StrictMode>
 );

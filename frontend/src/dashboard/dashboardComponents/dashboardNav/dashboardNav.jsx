@@ -52,12 +52,12 @@ export default function DashboardNav() {
               </Link>
             </li>
             <li className={styles.list}>
-              <Link to="/manageusers" className={styles.text}>
+              <Link to="/dashboard" className={styles.text}>
                 Manage Users
               </Link>
             </li>
             <li className={styles.list}>
-              <Link to="/favourites" className={styles.text}>
+              <Link to="/dashboard" className={styles.text}>
                 Post requests
               </Link>
             </li>
@@ -84,8 +84,15 @@ export default function DashboardNav() {
                     className={styles.text}
                     onClick={() => setShowDropDown(!showDropDown)}
                   >
-                    {" "}
-                    Welcome, {loggedInUser?.firstname}{" "}
+                    <div className={styles.prof}>
+                      Welcome, {loggedInUser?.firstname}
+                      {/* Add profile picture icon */}
+                      <img
+                        src={loggedInUser?.profile[0]?.url}
+                        alt="Profile"
+                        className={styles.profileIcon}
+                      />
+                    </div>
                   </p>
 
                   {showDropDown && (

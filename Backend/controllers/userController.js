@@ -39,11 +39,11 @@ export const register = asyncErrorHandling(async (req, res) => {
 
         cloudinaryResponse = await cloudinary.uploader.upload(profile.tempFilePath);
         if (!cloudinaryResponse || cloudinaryResponse.error) {
-            publicId = cloudinaryResponse.public_id
-            url = cloudinaryResponse.secure_url
             console.log("Cloudinary error:", cloudinaryResponse.error || "Unknown Cloudinary error");
             return errorHanlder(createError("Failed to upload"), req, res);
         }
+        publicId = cloudinaryResponse.public_id
+        url = cloudinaryResponse.secure_url
     }
     else {
         publicId = "gfpbmxq7uasbahzowi0t"
@@ -99,5 +99,23 @@ export const logout = asyncErrorHandling(async (req, res) => {
     }).json({
         success: true,
         message: "logged out",
+    })
+})
+
+export const deleteUser = asyncErrorHandling(async (req, res) => {
+    const { id } = req.params
+    const { email } = req.user
+
+    if (!email.endsWith(".admin@gmail.com")) return errorHanlder(createError("you're not authorized"), req, res)
+
+
+    const UserToDelete = await user.findById(id)
+    if (!UserToDelete) return errorHanlder(createError("User not found"), req, res)
+
+    await user.deleteOne({ _id: id });
+
+    res.send({
+        success: true,
+        message: "user deleted successfully"
     })
 })

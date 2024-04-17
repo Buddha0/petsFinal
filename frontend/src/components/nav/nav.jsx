@@ -57,23 +57,13 @@ export default function Nav() {
                 Available Pets
               </Link>
             </li>
-            {!isAdmin ? (
+
+            {!isAdmin && loggedInUser && (
               <li className={styles.list}>
                 <Link to="/favourites" className={styles.text}>
                   Favourite
                 </Link>
               </li>
-            ) : (
-              ""
-            )}
-            {cookies.token ? (
-              <li className={styles.list}>
-                <Link to="/favourites" className={styles.text}>
-                  Favourite
-                </Link>
-              </li>
-            ) : (
-              ""
             )}
 
             {isAdmin ? (
@@ -110,8 +100,15 @@ export default function Nav() {
                     className={styles.text}
                     onClick={() => setShowDropDown(!showDropDown)}
                   >
-                    {" "}
-                    Welcome, {loggedInUser?.firstname}{" "}
+                    <div className={styles.prof}>
+                      Welcome, {loggedInUser?.firstname}
+                      {/* Add profile picture icon */}
+                      <img
+                        src={loggedInUser?.profile[0]?.url}
+                        alt="Profile"
+                        className={styles.profileIcon}
+                      />
+                    </div>
                   </p>
 
                   {showDropDown && (

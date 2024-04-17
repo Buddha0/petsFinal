@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "../../components/footer/footer";
 import { AiOutlineSearch } from "react-icons/ai";
-
+import { useCookies } from "react-cookie";
 import Card from "../../components/card/card";
 
 export default function AllPets() {

@@ -12,7 +12,7 @@
 
       .cards {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 2rem;
 
           .card {
@@ -21,7 +21,7 @@
               align-items: center;
               justify-content: space-between;
               height: 150px;
-              padding: 5px 15px;
+              padding: 5px 45px;
               color: white;
               border-radius: 12px;
 

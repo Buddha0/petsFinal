@@ -68,14 +68,12 @@ export default function DashboardPets() {
 
                       <div className="buttons">
                         <MdDeleteForever
-                          //   size="xl"
                           className="delete_btn"
                           onClick={() => handlePetDelete(pet._id)}
                         />
-                            <Link to={`/editPets/${pet._id}`}>
-                            <CiEdit className="edit_btn" />
-                            </Link>
-                       
+                        <Link to={`/editPets/${pet._id}`}>
+                          <CiEdit className="edit_btn" />
+                        </Link>
                       </div>
                     </div>
                   </div>
