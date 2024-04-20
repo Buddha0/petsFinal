@@ -25,26 +25,16 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className={styles.footer_wrapper}>
+    
             <div className={styles.footer_col_2}>
               <h2>Services</h2>
-              <a href="#">Home</a>
-              <a href="#">Homeeeeee</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
+              <a href="#">Pet Product</a>
+              <a href="#">Vet</a>
+              <a href="#">Pet Adoption</a>
+
             </div>
 
-            <div className={styles.footer_col_3}>
-              <h2>About</h2>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-              <a href="#">Home</a>
-            </div>
+           
 
             <div className={styles.footer_col_4}>
               <p>
@@ -54,7 +44,7 @@ export default function Footer() {
                 <button class={styles.btn}>Sign Up Now👋</button>
               </Link>
             </div>
-          </div>
+    
         </div>
       </footer>
     </>
