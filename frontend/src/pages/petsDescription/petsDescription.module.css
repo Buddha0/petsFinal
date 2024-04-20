@@ -10,14 +10,15 @@
   width: 100%;
   height: 50vh;
   overflow: hidden;
+  background-image: linear-gradient(rgba(214, 212, 212, 0.8),
+  rgb(255, 255, 255)),
+url("https://cdn.hovia.com/app/uploads/Blue-Bulldog-and-Sausage-Dog-Pattern-Pet-Wallpaper-Mural-Plain.jpg");
+
+ 
+
 }
 
-.img_blur {
-  width: 100%;
-  filter: blur(15px);
-  object-fit: cover;
-  height: 100%;
-}
+
 
 .skeletonLoading_big {
   width: 100%;

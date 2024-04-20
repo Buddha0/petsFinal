@@ -121,13 +121,10 @@ export default function PetsDescription() {
           </>
         ) : (
           <>
+           
             {pet.image && pet.image[currentImageIndex] && (
               <>
-                <img
-                  src={pet.image[currentImageIndex].url}
-                  className={styles.img_blur}
-                  alt={`Blurry Image`}
-                />
+           
                 <img
                   src={pet.image[currentImageIndex].url}
                   className={styles.img}
