@@ -38,9 +38,13 @@ export default function Nav() {
     <>
       <nav className={styles.nav}>
         <div className={styles.navContainer}>
-          <Link to="/">
-            <img src="../logo.png" className={styles.logo}></img>
-          </Link>
+          <div className={styles.logo_container}>
+           
+              <h1 className={styles.logo}>Pets </h1>
+              <h1 className={styles.logoOrange}>Nepal</h1>
+   
+          </div>
+
           <ul className={styles.ul}>
             <li className={styles.list}>
               <Link to="/" className={styles.text}>
