@@ -7,9 +7,12 @@ export default function Nav() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showDropDown, setShowDropDown] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+
+    
     const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
     const tokenFromCookies = cookies.token;
 
